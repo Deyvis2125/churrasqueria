@@ -85,4 +85,4 @@ export async function getUserRole(uid) {
     console.error('Error obteniendo rol:', error);
     return 'cliente';
 }
-}
+}   
