@@ -24,6 +24,6 @@ export default function DashboardAdmin() {
 				{tab === 'ventas' && <AdminSales />}
 			</section>
 		</div>
-	);
+);
 }
 

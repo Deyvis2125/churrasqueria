@@ -225,12 +225,3 @@ body{
   opacity: .95;
 }
 
-/* Responsive */
-@media (max-width: 640px){
-  .dashboard-container{
-    padding: 18px;
-  }
-  .dashboard-content{
-    padding: 14px;
-  }
-}
