@@ -39,10 +39,17 @@ const Mozo = () => {
             {mesas.map((n) => (
               <button
                 key={n}
+<<<<<<< HEAD
                 className={mesa ${mesaSeleccionada === n ? "mesa-activa" : ""}}
                 onClick={() => setMesaSeleccionada(n)}
               >
                 <img className="mesa-img" src={mesaImg} alt={Mesa ${n}} />
+=======
+                className={`mesa ${mesaSeleccionada === n ? "mesa-activa" : ""}`}
+                onClick={() => setMesaSeleccionada(n)}
+              >
+                <img className="mesa-img" src={mesaImg} alt={`Mesa ${n}`} />
+>>>>>>> c8e07a0c95841eb1cc8de9f1f6281b8fe26a4af0
                 <span className="mesa-numero">Mesa {n}</span>
               </button>
             ))}

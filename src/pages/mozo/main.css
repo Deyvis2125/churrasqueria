@@ -1,0 +1,90 @@
+.mozo-view { padding: 20px; font-family: Arial, sans-serif; }
+.mozo-header { text-align: center; margin-bottom: 20px; }
+
+.contenido {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  align-items: start;
+}
+
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.mesa {
+  border: 0;
+  background: #f4f4f4;
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: transform .15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.mesa:hover { transform: scale(1.03); }
+.mesa-activa { outline: 3px solid #ffd24d; background: #fff6d6; }
+
+.mesa-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.mesa-numero { font-weight: bold; }
+
+.menu-panel {
+  background: white;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  padding: 14px;
+  position: sticky;
+  top: 12px;
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-cerrar {
+  border: 0;
+  background: #eee;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.menu-lista { margin-top: 12px; display: grid; gap: 10px; }
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.precio { font-size: 13px; color: #666; margin-top: 4px; }
+
+.btn-agregar {
+  border: 0;
+  background: #ffd24d;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.pedido { margin-top: 14px; }
+.pedido-lista { padding-left: 18px; }
+.total { margin-top: 10px; }
+.muted { color: #777; }
