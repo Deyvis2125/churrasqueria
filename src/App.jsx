@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Acceso from './pages/Acceso/acceso.jsx'
 import Registro from './pages/Acceso/registro.jsx'
 import DashboardAdmin from './pages/admin/dasboard-admin.jsx'
-import Mozo from './pages/mozo/dasboardmozo.jsx'
+import Mozo from './pages/mozo/mozo.jsx'
 
 function App() {
   return (
