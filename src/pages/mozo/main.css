@@ -16,7 +16,7 @@
 
 .mesa {
   border: 0;
-  background: #f4f4f4;
+  background: red;
   border-radius: 12px;
   padding: 14px;
   cursor: pointer;
@@ -68,7 +68,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #f0f0f0;
+  border: 1px solid red;
   border-radius: 10px;
   padding: 10px;
 }
