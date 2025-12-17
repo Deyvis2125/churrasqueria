@@ -1,0 +1,345 @@
+/* =========================
+   MOZO UI - Estilo Restaurante (Oscuro)
+   ========================= */
+
+:root{
+  --bg1: #2b1d14;     /* marrón oscuro */
+  --bg2: #1a120d;     /* casi negro cálido */
+
+  --card1: rgba(40,26,18,.95);
+  --card2: rgba(28,18,12,.95);
+
+  --text: #f9fafb;
+  --muted: rgba(255,255,255,.65);
+
+  --line: rgba(255,255,255,.10);
+
+  --accent: #f59e0b;     /* naranja comida */
+  --accent2: #b45309;    /* naranja oscuro */
+  --shadow: 0 12px 30px rgba(0,0,0,.45);
+  --shadow-sm: 0 8px 22px rgba(0,0,0,.45);
+
+  --r: 18px;
+  --r2: 22px;
+}
+
+*{ box-sizing: border-box; }
+
+/* Fondo general del módulo */
+.mozo-root {
+  padding: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  /* ✅ Fondo oscuro cálido */
+  background:
+    radial-gradient(1200px 400px at 10% 0%, rgba(245,158,11,.20), transparent 60%),
+    radial-gradient(900px 380px at 90% 10%, rgba(22,163,74,.10), transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+
+  color: var(--text);
+}
+
+/* Header */
+.mozo-top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+
+  padding: 14px;
+  border-radius: var(--r2);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.25));
+  box-shadow: var(--shadow-sm);
+}
+
+.mozo-logo {
+  width: 90px;
+  max-width: 18vw;
+  height: auto;
+
+  border-radius: 16px;
+  padding: 8px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.mozo-title h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: .2px;
+}
+
+.mozo-title p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+/* Tabs */
+.mozo-nav {
+  display: flex;
+  gap: 12px;
+  margin: 6px 0;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 16px 18px;
+  font-size: 18px;
+  font-weight: 900;
+  border-radius: var(--r);
+  border: 1px solid rgba(255,255,255,.18);
+
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.35));
+  color: var(--text);
+
+  cursor: pointer;
+  min-width: 240px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .08s ease, filter .12s ease, border-color .12s ease;
+}
+
+.tab-btn:hover { transform: translateY(-1px); }
+.tab-btn:active { transform: translateY(0px) scale(.99); }
+
+.tab-btn.active {
+  border-color: rgba(245,158,11,.65);
+  background: linear-gradient(180deg, rgba(245,158,11,.25), rgba(0,0,0,.35));
+}
+
+/* Main */
+.mozo-main { margin-top: 10px; flex: 1; }
+
+/* Cards */
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  padding: 14px;
+
+  background: linear-gradient(180deg, var(--card1), var(--card2));
+  box-shadow: var(--shadow);
+
+  color: var(--text);
+}
+
+.card h2{
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.muted { color: var(--muted); }
+
+/* Layout grid */
+.mozo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 1000px) {
+  .mozo-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* Mesas */
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mesa-btn {
+  padding: 18px;
+  border-radius: var(--r2);
+  border: 2px solid rgba(245,158,11,.25);
+
+  background: linear-gradient(180deg, rgba(245,158,11,.18), rgba(0,0,0,.45));
+
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
+
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform .08s ease, border-color .12s ease;
+}
+
+.mesa-btn:hover { transform: translateY(-1px); }
+.mesa-btn:active { transform: translateY(0px) scale(.99); }
+
+.mesa-btn.active {
+  border-color: rgba(245,158,11,.75);
+  background: linear-gradient(180deg, rgba(245,158,11,.30), rgba(0,0,0,.45));
+}
+
+.mesa-sub { margin-top: 6px; font-size: 14px; color: var(--muted); }
+
+/* Menú */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.menu-btn {
+  border-radius: var(--r2);
+  border: 1px solid rgba(255,255,255,.12);
+
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.35));
+  color: var(--text);
+
+  cursor: pointer;
+  padding: 12px;
+  text-align: left;
+
+  box-shadow: var(--shadow-sm);
+  transition: transform .08s ease, border-color .12s ease;
+}
+
+.menu-btn:hover { transform: translateY(-1px); border-color: rgba(245,158,11,.35); }
+.menu-btn:active { transform: translateY(0px) scale(.99); }
+
+.menu-row { display: flex; gap: 10px; align-items: center; }
+
+.menu-img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.menu-name { font-size: 18px; font-weight: 900; }
+.menu-price { color: var(--muted); margin-top: 2px; font-weight: 700; }
+
+.menu-add {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(245,158,11,.95);
+}
+
+/* Pedido */
+.pedido-list { display: grid; gap: 10px; margin-top: 10px; }
+
+.pedido-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 10px;
+
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.25));
+}
+
+.pedido-left { display: grid; gap: 2px; }
+.pedido-right { display: flex; align-items: center; gap: 10px; }
+
+/* Botones qty */
+.qty-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+  font-weight: 900;
+
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.qty-num { font-size: 22px; font-weight: 900; min-width: 30px; text-align: center; }
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
+  font-weight: 900;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255,255,255,.18);
+}
+
+.actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Botones grandes */
+.big-btn {
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 900;
+
+  border-radius: var(--r2);
+  border: 1px solid rgba(255,255,255,.18);
+
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.35));
+  color: var(--text);
+
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform .08s ease;
+}
+
+.big-btn:hover { transform: translateY(-1px); }
+.big-btn:active { transform: translateY(0px) scale(.99); }
+.big-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.big-btn.primary {
+  border-color: rgba(245,158,11,.75);
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  color: #1a120d;
+}
+
+/* Pill (estado) */
+.pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(245,158,11,.45);
+  margin-top: 6px;
+
+  background: rgba(245,158,11,.20);
+  color: var(--text);
+
+  font-weight: 900;
+}
+
+/* Pedidos Activos */
+.pedidos-wrap { display: grid; gap: 12px; }
+.pedidos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+
+.pedido-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.pedido-total { font-size: 18px; font-weight: 900; color: rgba(245,158,11,.95); }
+.pedido-items { margin: 12px 0; display: grid; gap: 8px; }
+
+.pedido-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+  padding: 10px;
+
+  background: rgba(255,255,255,.05);
+}
+
+/* Responsive */
+@media (max-width: 420px){
+  .tab-btn{ min-width: 100%; }
+  .actions-row{ grid-template-columns: 1fr; }
+}
