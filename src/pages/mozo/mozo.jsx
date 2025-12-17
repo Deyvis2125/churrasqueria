@@ -26,6 +26,7 @@ const Mozo = () => {
   return (
     <section className="mozo-view">
       <header className="mozo-header">
+        <img src="/public/imagen/logo-churrasqueria.png" alt="Churrasqueria Logo" style={{ width: 120, marginBottom: 16 }} />
         <h1>Área del Mozo</h1>
         <p>Selecciona una mesa para tomar el pedido</p>
       </header>
