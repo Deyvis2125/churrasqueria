@@ -1,0 +1,180 @@
+/* Reset básico para el componente */
+.cocina-dashboard {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.cocina-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cocina-header h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Tablero de 3 columnas */
+.tablero {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start; /* Para que las columnas no se estiren vacías */
+}
+
+/* Estilos de las Columnas */
+.columna {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  min-height: 500px;
+}
+
+.columna h2 {
+  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.col-pendientes h2 { color: #e74c3c; }
+.col-preparando h2 { color: #f39c12; }
+.col-listos h2 { color: #27ae60; }
+
+/* Tarjetas de Pedido */
+.pedido-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.pedido-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  background: #34495e;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mesa-badge {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.hora {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.card-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-body li {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 5px;
+}
+
+.nota {
+  background: #fff3cd;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #856404;
+  margin-top: 10px;
+}
+
+.card-footer {
+  padding: 10px;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+/* Botones de acción */
+.btn-accion {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.2s;
+}
+
+.btn-rojo { background-color: #e74c3c; }
+.btn-rojo:hover { background-color: #c0392b; }
+
+.btn-naranja { background-color: #f39c12; }
+.btn-naranja:hover { background-color: #d35400; }
+
+.btn-verde { background-color: #27ae60; }
+.btn-verde:hover { background-color: #2ecc71; }
+
+/* Responsive para celulares */
+@media (max-width: 900px) {
+  .tablero {
+    grid-template-columns: 1fr; /* Una sola columna en móviles */
+  }
+}
+
+/* Pantallas de Carga y Error */
+.pantalla-carga, .pantalla-error {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.pantalla-error h1 {
+  color: #e74c3c;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.btn-volver {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #34495e;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.usuario-badge {
+  font-size: 0.8rem;
+  background: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 15px;
+  vertical-align: middle;
+  margin-left: 10px;
+}
