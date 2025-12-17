@@ -1,7 +1,7 @@
 /* Estilos generales para la página de acceso */
 body {
   font-family: 'Arial', sans-serif;
-  background-image: url('./imagen/logyn.webp'); /* Asegúrate de colocar la imagen en public/images/ */
+  background-image: url('/src/pages/Acceso/imagen/logyn.webp'); /* Imagen de fondo personalizada */
   background-size: cover;
   background-position: center;
   margin: 0;

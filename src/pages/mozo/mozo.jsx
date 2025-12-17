@@ -1,16 +1,16 @@
 import { useState } from "react";
-import "./main.css";
+import "./main.css"; // Corrige el import del archivo CSS
 
 // Si ya tienes imágenes en /public, puedes usarlas así:
-const mesaImg = "/mesa.png"; // pon tu imagen en: public/mesa.png
+const mesaImg = "/imagen/mesa.png"; // Actualiza la ruta de la imagen para usar la nueva imagen de las mesas
 
 const mesas = [1, 2, 3, 4, 5, 6, 7, 8];
 
 const menu = [
-  { id: 1, nombre: "Hamburguesa", precio: 18 },
-  { id: 2, nombre: "Pizza", precio: 25 },
-  { id: 3, nombre: "Pollo a la brasa", precio: 30 },
-  { id: 4, nombre: "Gaseosa", precio: 6 },
+  { id: 1, nombre: "Hamburguesa", precio: 18, imagen: "/imagenes/hamburguesa.png" },
+  { id: 2, nombre: "Pizza", precio: 25, imagen: "/imagenes/pizza.png" },
+  { id: 3, nombre: "Pollo a la brasa", precio: 30, imagen: "/imagenes/pollo.png" },
+  { id: 4, nombre: "Gaseosa", precio: 6, imagen: "/imagenes/gaseosa.png" },
 ];
 
 const Mozo = () => {
@@ -42,7 +42,6 @@ const Mozo = () => {
                 className={`mesa ${mesaSeleccionada === n ? "mesa-activa" : ""}`}
                 onClick={() => setMesaSeleccionada(n)}
               >
-                <img className="mesa-img" src={mesaImg} alt={`Mesa ${n}`} />
                 <span className="mesa-numero">Mesa {n}</span>
               </button>
             ))}
@@ -63,6 +62,7 @@ const Mozo = () => {
               {menu.map((item) => (
                 <div key={item.id} className="menu-item">
                   <div>
+                    <img src={item.imagen} alt={item.nombre} className="menu-imagen" />
                     <strong>{item.nombre}</strong>
                     <div className="precio">S/ {item.precio}</div>
                   </div>

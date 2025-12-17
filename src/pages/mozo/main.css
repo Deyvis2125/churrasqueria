@@ -15,25 +15,15 @@
 }
 
 .mesa {
-  border: 0;
-  background: red;
+  width: 120px; /* Aumenta el ancho del cuadro */
+  height: 120px; /* Aumenta la altura del cuadro */
+  background-image: url('./fotos/mesas.webp'); /* Imagen de las mesas */
+  background-size: cover;
+  background-position: center;
   border-radius: 12px;
-  padding: 14px;
-  cursor: pointer;
-  transition: transform .15s;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-}
-
-.mesa:hover { transform: scale(1.03); }
-.mesa-activa { outline: 3px solid #ffd24d; background: #fff6d6; }
-
-.mesa-img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
 }
 
 .mesa-numero { font-weight: bold; }
@@ -71,6 +61,9 @@
   border: 1px solid red;
   border-radius: 10px;
   padding: 10px;
+  background-image: url('./fotos/comida.webp'); /* Imagen de fondo para el menú */
+  background-size: cover;
+  background-position: center;
 }
 
 .precio { font-size: 13px; color: #666; margin-top: 4px; }
@@ -88,3 +81,11 @@
 .pedido-lista { padding-left: 18px; }
 .total { margin-top: 10px; }
 .muted { color: #777; }
+
+.menu-imagen {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
