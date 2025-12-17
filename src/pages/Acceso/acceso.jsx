@@ -28,9 +28,13 @@ export default function Acceso() {
           return;
         }
         if (role === 'mozo') {
-  navigate('/mozo');
-  return;
-}
+          navigate('/mozo');
+          return;
+        }
+        if (role === 'cocina') {
+          navigate('/cocina');
+          return;
+        }
       }
     } catch (err) {
       setLoading(false);
