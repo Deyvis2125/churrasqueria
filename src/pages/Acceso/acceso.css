@@ -1,0 +1,78 @@
+/* Estilos generales para la página de acceso */
+body {
+  font-family: 'Arial', sans-serif;
+  background-image: url('./imagen/logyn.webp'); /* Asegúrate de colocar la imagen en public/images/ */
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Contenedor del formulario */
+form {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 360px;
+  text-align: center;
+}
+
+h2 {
+  color: #d35400;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button {
+  background-color: #d35400;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #e67e22;
+}
+
+button:disabled {
+  background-color: #f0a07c;
+  cursor: not-allowed;
+}
+
+/* Mensajes de error y éxito */
+.message {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.message.error {
+  color: #e74c3c;
+}
+
+.message.success {
+  color: #27ae60;
+}

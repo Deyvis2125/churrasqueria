@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/authServices';
+import "./acceso.css";
 
 export default function Acceso() {
   const [email, setEmail] = useState('');
