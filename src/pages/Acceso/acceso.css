@@ -1,9 +1,10 @@
 /* Estilos generales para la página de acceso */
 body {
   font-family: 'Arial', sans-serif;
-  background-image: url('/src/pages/Acceso/imagen/logyn.webp'); /* Imagen de fondo personalizada */
+ background-image: url('./imagen/restauran.webp'); /* Imagen de fondo personalizada */
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   margin: 0;
   padding: 0;
   display: flex;
