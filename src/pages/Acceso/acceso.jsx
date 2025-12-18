@@ -38,17 +38,17 @@ export default function Acceso() {
       console.log('ROL LIMPIO:', `"${role}"`);
 
       if (role === 'admin' || role === 'administrador') {
-        navigate('/admin', { replace: true });
+        navigate('/admin');
         return;
       }
 
       if (role === 'mozo') {
-        navigate('/mozo', { replace: true });
+        navigate('/mozo');
         return;
       }
 
       if (role === 'cajero') {
-        navigate('/cajero', { replace: true });
+        navigate('/cajero');
         return;
       }
 
