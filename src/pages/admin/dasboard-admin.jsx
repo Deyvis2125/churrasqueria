@@ -1,35 +1,55 @@
-import React, { useState } from 'react';
-import AdminUsers from './admin-users.jsx';
-import AdminMenus from './admin-menus.jsx';
-import AdminSales from './admin-sales.jsx';
-import AdminMesas from './admin-mesas.jsx';
-import AdminUsersList from './admin-users-list.jsx';
-import './dashboard-admin.css';
+import React, { useState } from "react";
+import AdminUsers from "./admin-users.jsx";
+import AdminMenus from "./admin-menus.jsx";
+import AdminSales from "./admin-sales.jsx";
+import AdminMesas from "./admin-mesas.jsx";
+import AdminUsersList from "./admin-users-list.jsx";
+import "./dashboard-admin.css";
 
 export default function DashboardAdmin() {
-	const [tab, setTab] = useState('usuarios');
+  const [tab, setTab] = useState("usuarios");
 
-	return (
-		<div className="dashboard-container">
-			<h1 className="dashboard-title">Dashboard Admin</h1>
-			<p className="dashboard-welcome">Bienvenido, eres administrador. Aquí van las herramientas de administración.</p>
+  return (
+    <div className="dashboard-container">
+      {/* 🔥 TÍTULO CAMBIADO */}
+      <h1 className="dashboard-title">Admin Panel</h1>
 
-			<nav className="dashboard-nav">
-				<button className="nav-button" onClick={()=>setTab('usuarios')}>Registrar Usuario</button>
-				<button className="nav-button" onClick={()=>setTab('listado-usuarios')}>Listado Usuarios</button>
-				<button className="nav-button" onClick={()=>setTab('menus')}>Menús</button>
-				<button className="nav-button" onClick={()=>setTab('ventas')}>Ventas</button>
-				<button className="nav-button" onClick={()=>setTab('mesas')}>Mesas</button>
-			</nav>
+      {/* 🔥 SUBTÍTULO MÁS PROFESIONAL */}
+      <p className="dashboard-welcome">
+        Panel de administración del restaurante. Selecciona una opción para
+        gestionar el sistema.
+      </p>
 
-			<section className="dashboard-content">
-				{tab === 'usuarios' && <AdminUsers />}
-				{tab === 'listado-usuarios' && <AdminUsersList />}
-				{tab === 'menus' && <AdminMenus />}
-				{tab === 'ventas' && <AdminSales />}
-				{tab === 'mesas' && <AdminMesas />}
-			</section>
-		</div>
-);
+      <nav className="dashboard-nav">
+        <button className="nav-button" onClick={() => setTab("usuarios")}>
+          Registrar Usuario
+        </button>
+
+        <button className="nav-button" onClick={() => setTab("listado-usuarios")}>
+          Listado Usuarios
+        </button>
+
+        <button className="nav-button" onClick={() => setTab("menus")}>
+          Menús
+        </button>
+
+        <button className="nav-button" onClick={() => setTab("ventas")}>
+          Ventas
+        </button>
+
+        <button className="nav-button" onClick={() => setTab("mesas")}>
+          Mesas
+        </button>
+      </nav>
+
+      <section className="dashboard-content">
+        {tab === "usuarios" && <AdminUsers />}
+        {tab === "listado-usuarios" && <AdminUsersList />}
+        {tab === "menus" && <AdminMenus />}
+        {tab === "ventas" && <AdminSales />}
+        {tab === "mesas" && <AdminMesas />}
+      </section>
+    </div>
+  );
 }
 
