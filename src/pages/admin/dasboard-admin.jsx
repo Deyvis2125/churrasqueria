@@ -4,10 +4,12 @@ import AdminMenus from "./admin-menus.jsx";
 import AdminSales from "./admin-sales.jsx";
 import AdminMesas from "./admin-mesas.jsx";
 import AdminUsersList from "./admin-users-list.jsx";
+import AdminMenusList from "./admin-ver-menu.jsx";
 import "./dashboard-admin.css";
 
 export default function DashboardAdmin() {
   const [tab, setTab] = useState("usuarios");
+  const [subTab, setSubTab] = useState("crear");
 
   return (
     <div className="dashboard-container">
@@ -45,7 +47,20 @@ export default function DashboardAdmin() {
       <section className="dashboard-content">
         {tab === "usuarios" && <AdminUsers />}
         {tab === "listado-usuarios" && <AdminUsersList />}
-        {tab === "menus" && <AdminMenus />}
+        {tab === "menus" && (
+          <div>
+            <nav className="dashboard-nav">
+              <button className="nav-button" onClick={() => setSubTab("crear")}>
+                Crear Menú
+              </button>
+              <button className="nav-button" onClick={() => setSubTab("ver")}>
+                Ver Menús
+              </button>
+            </nav>
+            {subTab === "crear" && <AdminMenus />}
+            {subTab === "ver" && <AdminMenusList />}
+          </div>
+        )}
         {tab === "ventas" && <AdminSales />}
         {tab === "mesas" && <AdminMesas />}
       </section>
