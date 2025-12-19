@@ -6,6 +6,8 @@ import {
   where,
   updateDoc,
   doc,
+  writeBatch,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
@@ -31,15 +33,43 @@ export default function DashboardCajero() {
   }, []);
 
   const cerrarPedido = async (pedido) => {
-    const ok = confirm(
-      `¿Confirmar pago del pedido de la Mesa ${pedido.mesaNumero}?`
-    );
+    const ok = confirm(`¿Confirmar pago y liberar Mesa ${pedido.mesaNumero}?`);
     if (!ok) return;
 
-    await updateDoc(doc(db, "pedidos", pedido.id), {
-      estado: "cerrado",
+  try {
+    const batch = writeBatch(db);
+
+    // 1. Relación con 'ventas': Creamos un documento nuevo
+    const ventaRef = doc(collection(db, "ventas"));
+    batch.set(ventaRef, {
+      pedidoId: pedido.id,       // <--- Vinculamos la venta al pedido original
+      items: pedido.items,       // <--- Copiamos los productos (denormalización)
+      total: pedido.total,
+      mozoId: pedido.mozoId,     // <--- Atribuimos la venta al mozo
+      mesaNumero: pedido.mesaNumero,
+      fecha: serverTimestamp(),  // <--- Fecha de la venta
+      metodoPago: "efectivo",    // Podrías agregar un selector para esto
     });
-  };
+
+    // 2. Actualizar el Pedido
+    const pedidoRef = doc(db, "pedidos", pedido.id);
+    batch.update(pedidoRef, { estado: "cerrado" });
+
+    // 3. Relación con 'mesa': ¡Muy importante! 
+    // Usamos el mesaId que el mozo guardó en el pedido anteriormente
+    if (pedido.mesaId) {
+      const mesaRef = doc(db, "mesa", pedido.mesaId);
+      batch.update(mesaRef, { disponible: true }); // <--- La mesa vuelve a estar libre
+    }
+
+    await batch.commit();
+    alert("Venta registrada y mesa liberada ✅");
+
+  } catch (error) {
+    console.error("Error en la venta:", error);
+    alert("No se pudo procesar el pago");
+  }
+};
 
   return (
     <section style={{ padding: 20 }}>
