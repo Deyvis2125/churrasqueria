@@ -4,7 +4,7 @@ import Registro from './pages/Acceso/registro.jsx'
 import DashboardAdmin from './pages/admin/dasboard-admin.jsx'
 import Mozo from './pages/mozo/mozo.jsx'
 import AdminMesas from './pages/admin/admin-mesas.jsx'
-import DashboardCajero from './pages/cajero/dasboardcajero.jsx'
+import DashboardCajero from './pages/cajero/dashboardcajero.jsx'
 function App() {
   return (
     <BrowserRouter>
