@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/authServices';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../services/authServices";
 import "./acceso.css";
 
 export default function Acceso() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
@@ -21,101 +21,65 @@ export default function Acceso() {
 
       if (!res.success) {
         setMessage({
-          type: 'error',
-          text: res.error || 'Error al iniciar sesión',
+          type: "error",
+          text: res.error || "Error al iniciar sesión",
         });
         return;
       }
 
-      console.log('Usuario autenticado:', res.user.uid);
-      console.log('ROL RAW:', `"${res.role}"`);
+      const role = (res.role || "").toString().trim().toLowerCase();
 
-      const role = (res.role || '')
-        .toString()
-        .trim()
-        .toLowerCase();
+      if (role === "admin" || role === "administrador") return navigate("/admin");
+      if (role === "mozo") return navigate("/mozo");
+      if (role === "cajero") return navigate("/cajero");
 
-      console.log('ROL LIMPIO:', `"${role}"`);
-
-      if (role === 'admin' || role === 'administrador') {
-        navigate('/admin');
-        return;
-      }
-
-      if (role === 'mozo') {
-        navigate('/mozo');
-        return;
-      }
-
-      if (role === 'cajero') {
-        navigate('/cajero');
-        return;
-      }
-
-      setMessage({
-        type: 'error',
-        text: `Rol no reconocido: ${res.role}`,
-      });
-
+      setMessage({ type: "error", text: `Rol no reconocido: ${res.role}` });
     } catch (err) {
       setLoading(false);
-      setMessage({
-        type: 'error',
-        text: err.message || 'Error inesperado',
-      });
+      setMessage({ type: "error", text: err.message || "Error inesperado" });
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          width: 360,
-          padding: 24,
-          border: '1px solid #eee',
-          borderRadius: 8,
-        }}
-      >
-        <h2 style={{ marginBottom: 12 }}>Ingresar</h2>
+    <div className="access-layout">
+      <div className="access-container">
+        <h1 className="access-title">Churrasquería</h1>
+        <p className="access-subtitle">Acceso al sistema</p>
 
-        <label style={{ display: 'block', marginBottom: 8 }}>Correo</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ width: '100%', padding: 8, marginBottom: 12 }}
-        />
-
-        <label style={{ display: 'block', marginBottom: 8 }}>Contraseña</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ width: '100%', padding: 8, marginBottom: 16 }}
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ width: '100%', padding: 10 }}
-        >
-          {loading ? 'Ingresando...' : 'Ingresar'}
-        </button>
-
-        {message && (
-          <div
-            style={{
-              marginTop: 12,
-              color: message.type === 'error' ? '#a00' : '#0a0',
-            }}
-          >
-            {message.text}
+        <form className="access-form" onSubmit={handleSubmit}>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Correo</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tucorreo@gmail.com"
+              required
+            />
           </div>
-        )}
-      </form>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label>Contraseña</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••"
+              required
+            />
+          </div>
+
+          <button className="access-btn" type="submit" disabled={loading}>
+            {loading ? "Ingresando..." : "Ingresar"}
+          </button>
+
+          {message && (
+            <div className={`access-message ${message.type}`}>
+              {message.text}
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

@@ -12,7 +12,7 @@
   --bg2:#120709;
 
   --glass: rgba(18,10,12,.68);
-  --text:#f5f0ea;
+  --text:red;
   --muted: rgba(245,240,234,.7);
 
   --red:#7b1117;
@@ -32,13 +32,15 @@ body{
   margin:0;
   font-family:"Inter", system-ui, sans-serif;
   color:var(--text);
+  min-height:100vh;
 
-  /* Fondo oscuro completo */
-  background:
-    radial-gradient(1200px 700px at 20% 10%, rgba(177,26,34,.30), transparent 60%),
-    radial-gradient(900px 600px at 80% 20%, rgba(214,163,84,.18), transparent 60%),
-    linear-gradient(180deg, var(--bg0), var(--bg1) 55%, var(--bg2));
+  background-image: url("/public/imagen/logyn.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
+
 
 /* ==============================
    LAYOUT PANTALLA COMPLETA
@@ -105,41 +107,47 @@ body{
   margin-bottom: 32px;
 }
 
-/* ==============================
-   FORMULARIO
-   ============================== */
+/* ============================== */
+/* FORMULARIO MEJORADO */
+/* ============================== */
 
-.access-form{
-  display:grid;
-  gap:18px;
+.access-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ✅ centrado horizontal */
+  gap: 40px; /* ✅ más espacio entre elementos */
 }
 
-.access-form label{
-  font-family:"Cinzel", serif;
-  font-size:14px;
-  letter-spacing:.6px;
-  color:var(--gold);
+.access-form label {
+  font-family: "Cinzel", serif; /* ✅ misma tipografía para todos */
+  font-size: 18px; /* ✅ tamaño uniforme */
+  letter-spacing: 0.8px;
+  color: var(--gold);
+  text-align: center; /* ✅ centrado texto */
 }
 
 .access-form input,
-.access-form select{
-  background: rgba(0,0,0,.55);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
+.access-form select {
+  background: rgba(50, 50, 50, 0.85); /* ✅ fondo más elegante */
+  border: 2px solid var(--gold); /* ✅ borde más definido */
+  border-radius: 24px; /* ✅ bordes más redondeados */
+  padding: 16px 20px; /* ✅ más espacio interno */
   color: var(--text);
-  font-size:16px;
+  font-size: 18px; /* ✅ texto más grande */
+  text-align: center; /* ✅ centrado texto */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.access-form input::placeholder{
-  color: rgba(245,240,234,.45);
+.access-form input::placeholder {
+  color: rgba(245, 240, 234, 0.6); /* ✅ placeholder más visible */
 }
 
 .access-form input:focus,
-.access-form select:focus{
-  outline:none;
-  border-color: rgba(214,163,84,.75);
-  box-shadow: 0 0 0 4px rgba(214,163,84,.18);
+.access-form select:focus {
+  outline: none;
+  border-color: var(--red2); /* ✅ color de enfoque */
+  box-shadow: 0 0 10px var(--red2);
+  transform: scale(1.05); /* ✅ efecto de enfoque */
 }
 
 /* ==============================
@@ -147,31 +155,31 @@ body{
    ============================== */
 
 .access-btn{
-  margin-top: 14px;
-  padding: 18px;
+  margin-top: 20px;
+  padding: 18px 24px; /* ✅ más espacio interno */
   min-height: 60px;
 
-  border-radius: 20px;
-  border: 1px solid rgba(214,163,84,.45);
+  border-radius: 30px; /* ✅ bordes más redondeados */
+  border: 2px solid var(--gold); /* ✅ borde más definido */
 
   font-family:"Cinzel", serif;
-  font-size:16px;
+  font-size:18px; /* ✅ texto más grande */
   font-weight:800;
-  letter-spacing:.8px;
+  letter-spacing:1px;
 
   color:var(--text);
   cursor:pointer;
 
   background:
-    linear-gradient(180deg, rgba(177,26,34,.75), rgba(10,6,7,.9));
+    linear-gradient(180deg, var(--red2), var(--red)); /* ✅ gradiente más vibrante */
 
-  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
 }
 
 .access-btn:hover{
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-  box-shadow: 0 20px 48px rgba(0,0,0,.7);
+  transform: translateY(-4px); /* ✅ efecto más pronunciado */
+  filter: brightness(1.2);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8);
 }
 
 .access-btn:disabled{
