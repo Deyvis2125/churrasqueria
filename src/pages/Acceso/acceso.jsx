@@ -44,23 +44,6 @@ export default function Acceso() {
             setMessage({ type: 'error', text: `Rol no reconocido: ${res.role}` });
             break;
         }
-        if (role === 'mozo') {
-          navigate('/mozo');
-          return;
-        }
-        if (role === 'cocina') {
-          navigate('/cocina');
-          return;
-        }
-        if (role === 'cajero') {
-          navigate('/cajero');
-          return;
-        }
-        setMessage({
-          type: "error",
-          text: res.error || "Error al iniciar sesión",
-        });
-        return;
       }
     } catch (err) {
       setLoading(false);
