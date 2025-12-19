@@ -5,7 +5,7 @@ export default function AdminUsers() {
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rol, setRol] = useState('cliente');
+  const [rol, setRol] = useState('cajero');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -22,7 +22,7 @@ export default function AdminUsers() {
       setLoading(false);
       if (res.success) {
         setMessage({ type: 'success', text: 'Usuario registrado correctamente' });
-        setNombre(''); setEmail(''); setPassword(''); setRol('cliente');
+        setNombre(''); setEmail(''); setPassword(''); setRol('cajero');
       } else {
         setMessage({ type: 'error', text: res.error || 'Error en registro' });
       }

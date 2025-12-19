@@ -37,20 +37,16 @@ export default function Acceso() {
           navigate('/cocina');
           return;
         }
+        if (role === 'cajero') {
+          navigate('/cajero');
+          return;
+        }
         setMessage({
           type: "error",
           text: res.error || "Error al iniciar sesión",
         });
         return;
       }
-
-      const role = (res.role || "").toString().trim().toLowerCase();
-
-      if (role === "admin" || role === "administrador") return navigate("/admin");
-      if (role === "mozo") return navigate("/mozo");
-      if (role === "cajero") return navigate("/cajero");
-
-      setMessage({ type: "error", text: `Rol no reconocido: ${res.role}` });
     } catch (err) {
       setLoading(false);
       setMessage({ type: "error", text: err.message || "Error inesperado" });
