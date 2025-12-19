@@ -1,79 +1,211 @@
-/* Estilos generales para la página de acceso */
-body {
-  font-family: 'Arial', sans-serif;
- background-image: url('./imagen/restauran.webp'); /* Imagen de fondo personalizada */
+/* ==============================
+   ACCESO · CHURRASQUERÍA
+   Pantalla completa + centrado
+   Dark Grill · Liquid Glass
+   ============================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap");
+
+:root{
+  --bg0:#050304;
+  --bg1:#0b0607;
+  --bg2:#120709;
+
+  --glass: rgba(18,10,12,.68);
+  --text:red;
+  --muted: rgba(245,240,234,.7);
+
+  --red:#7b1117;
+  --red2:#b11a22;
+  --gold:#d6a354;
+
+  --line: rgba(255,255,255,.14);
+  --shadow: 0 32px 90px rgba(0,0,0,.75);
+
+  --r:22px;
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+
+body{
+  margin:0;
+  font-family:"Inter", system-ui, sans-serif;
+  color:var(--text);
+  min-height:100vh;
+
+  background-image: url("/public/imagen/logyn.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  background-attachment: fixed;
 }
 
-/* Contenedor del formulario */
-form {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  width: 360px;
-  text-align: center;
-}
 
-h2 {
-  color: #d35400;
-  margin-bottom: 16px;
-}
+/* ==============================
+   LAYOUT PANTALLA COMPLETA
+   ============================== */
 
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-input {
+.access-layout{
+  min-height: 100vh;
   width: 100%;
-  padding: 10px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+
+  display: flex;
+  align-items: center;      /* ✅ centrado vertical */
+  justify-content: center;  /* ✅ centrado horizontal */
+
+  padding: 32px;
 }
 
-button {
-  background-color: #d35400;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+/* ==============================
+   CONTENEDOR EXPANDIDO
+   ============================== */
+
+.access-container{
+  width: 100%;
+  max-width: 720px;     /* ✅ más ancho en PC */
+  padding: 48px 52px;
+
+  background: var(--glass);
+  border-radius: var(--r);
+  border: 1px solid rgba(177,26,34,.35);
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(18px) saturate(150%);
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #e67e22;
+/* brillo líquido */
+.access-container::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background:
+    radial-gradient(600px 260px at 20% 0%, rgba(214,163,84,.22), transparent 60%),
+    radial-gradient(700px 360px at 100% 40%, rgba(177,26,34,.30), transparent 60%);
+  pointer-events:none;
 }
 
-button:disabled {
-  background-color: #f0a07c;
-  cursor: not-allowed;
+/* ==============================
+   TÍTULOS
+   ============================== */
+
+.access-title{
+  font-family:"Great Vibes", cursive;
+  font-size: clamp(64px, 6vw, 86px);
+  text-align:center;
+  margin: 0 0 10px 0;
+  color: var(--gold);
+  text-shadow: 0 20px 60px rgba(0,0,0,.7);
 }
 
-/* Mensajes de error y éxito */
-.message {
-  margin-top: 12px;
-  font-size: 14px;
+.access-subtitle{
+  text-align:center;
+  font-size:15px;
+  color:var(--muted);
+  margin-bottom: 32px;
 }
 
-.message.error {
-  color: #e74c3c;
+/* ============================== */
+/* FORMULARIO MEJORADO */
+/* ============================== */
+
+.access-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ✅ centrado horizontal */
+  gap: 40px; /* ✅ más espacio entre elementos */
 }
 
-.message.success {
-  color: #27ae60;
+.access-form label {
+  font-family: "Cinzel", serif; /* ✅ misma tipografía para todos */
+  font-size: 18px; /* ✅ tamaño uniforme */
+  letter-spacing: 0.8px;
+  color: var(--gold);
+  text-align: center; /* ✅ centrado texto */
+}
+
+.access-form input,
+.access-form select {
+  background: rgba(50, 50, 50, 0.85); /* ✅ fondo más elegante */
+  border: 2px solid var(--gold); /* ✅ borde más definido */
+  border-radius: 24px; /* ✅ bordes más redondeados */
+  padding: 16px 20px; /* ✅ más espacio interno */
+  color: var(--text);
+  font-size: 18px; /* ✅ texto más grande */
+  text-align: center; /* ✅ centrado texto */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.access-form input::placeholder {
+  color: rgba(245, 240, 234, 0.6); /* ✅ placeholder más visible */
+}
+
+.access-form input:focus,
+.access-form select:focus {
+  outline: none;
+  border-color: var(--red2); /* ✅ color de enfoque */
+  box-shadow: 0 0 10px var(--red2);
+  transform: scale(1.05); /* ✅ efecto de enfoque */
+}
+
+/* ==============================
+   BOTÓN PRINCIPAL
+   ============================== */
+
+.access-btn{
+  margin-top: 20px;
+  padding: 18px 24px; /* ✅ más espacio interno */
+  min-height: 60px;
+
+  border-radius: 30px; /* ✅ bordes más redondeados */
+  border: 2px solid var(--gold); /* ✅ borde más definido */
+
+  font-family:"Cinzel", serif;
+  font-size:18px; /* ✅ texto más grande */
+  font-weight:800;
+  letter-spacing:1px;
+
+  color:var(--text);
+  cursor:pointer;
+
+  background:
+    linear-gradient(180deg, var(--red2), var(--red)); /* ✅ gradiente más vibrante */
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.access-btn:hover{
+  transform: translateY(-4px); /* ✅ efecto más pronunciado */
+  filter: brightness(1.2);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8);
+}
+
+.access-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+/* ==============================
+   MENSAJES
+   ============================== */
+
+.access-message{
+  text-align:center;
+  font-size:15px;
+  font-weight:600;
+}
+
+.access-message.error{ color:#ff6b6b; }
+.access-message.success{ color:#6be6a6; }
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
+
+@media (max-width: 720px){
+  .access-container{
+    padding: 36px 28px;
+  }
 }

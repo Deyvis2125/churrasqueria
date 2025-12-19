@@ -38,19 +38,19 @@ export default function AdminUsers() {
       <form onSubmit={handleSubmit} style={{maxWidth:480}}>
         <div style={{marginBottom:8}}>
           <label>Nombre</label>
-          <input value={nombre} onChange={(e)=>setNombre(e.target.value)} style={{width:'100%', padding:8}} />
+          <input value={nombre} onChange={(e)=>setNombre(e.target.value)} />
         </div>
         <div style={{marginBottom:8}}>
           <label>Email</label>
-          <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} style={{width:'100%', padding:8}} />
+          <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
         </div>
         <div style={{marginBottom:8}}>
           <label>Contraseña</label>
-          <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} style={{width:'100%', padding:8}} />
+          <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
         </div>
         <div style={{marginBottom:12}}>
           <label>Rol</label>
-          <select value={rol} onChange={(e)=>setRol(e.target.value)} style={{width:'100%', padding:8}}>
+          <select value={rol} onChange={(e)=>setRol(e.target.value)}>
             <option value="cajero">Cajero</option>
             <option value="mozo">Mozo</option>
             <option value="cocina">Cocina</option>

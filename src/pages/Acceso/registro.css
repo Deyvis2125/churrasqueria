@@ -1,0 +1,53 @@
+/* Centrar todo el formulario */
+.registro-form{
+  display:grid;
+  gap:14px;
+  justify-items: center;   /* ✅ centra los campos */
+}
+
+/* Cada campo centrado */
+.field{
+  width: 100%;
+  max-width: 320px;        /* ✅ controla el ancho bonito */
+  display:grid;
+  gap:8px;
+  justify-items: center;   /* ✅ centra label + input */
+}
+
+/* Label centrado y con estilo dorado */
+.field label{
+  font-weight:800;
+  color:#d6a354;
+  letter-spacing:.6px;
+  text-align:center;
+  font-family:"Cinzel", serif;
+}
+
+/* Inputs SIN blanco: efecto glass oscuro */
+.field input,
+.field select{
+  width: 100%;
+  padding:14px 16px;
+  border-radius:18px;
+
+  background: rgba(15,10,12,.55);              /* ✅ adiós blanco */
+  border: 1px solid rgba(214,163,84,.45);
+  color:#f5f0ea;
+
+  text-align:center;                            /* ✅ texto centrado */
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
+}
+
+/* Placeholder más suave */
+.field input::placeholder{
+  color:rgba(245,240,234,.45);
+  text-align:center;
+}
+
+/* Focus más elegante */
+.field input:focus,
+.field select:focus{
+  outline:none;
+  border-color:#d6a354;
+  box-shadow: 0 0 0 4px rgba(214,163,84,.18);
+}
