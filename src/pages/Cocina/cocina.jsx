@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../../firebase/config';
-import { collection, query, onSnapshot, doc, getDoc, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc, getDoc, orderBy, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import './main_cocina.css';
 
@@ -34,11 +34,13 @@ const Cocina = () => {
     if (!esCocinero) return;
 
     // La consulta ahora se enfoca solo en los pedidos pendientes
-    const q = query(collection(db, 'pedidos'), orderBy('createdAt', 'asc'));
+    const q = query(
+      collection(db, 'pedidos'),
+      where('estado', '==', 'pendiente'),
+      orderBy('createdAt', 'asc')
+    );
     const unsubscribePedidos = onSnapshot(q, (snapshot) => {
-      const pedidosData = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(p => p.estado === 'pendiente'); // Filtramos aquí
+      const pedidosData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setPedidos(pedidosData);
     });
 
