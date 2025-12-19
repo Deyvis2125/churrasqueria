@@ -64,7 +64,7 @@ export default function MozoPedidosActivos() {
   }, []);
 
   const pedidosPendientes = useMemo(() => {
-    return pedidos.filter((p) => p.estado === "pendiente" || p.estado === "preparando" || p.estado === "listo");
+    return pedidos.filter((p) => p.estado === "pendiente");
   }, [pedidos]);
 
   const pedidosEntregados = useMemo(() => {
@@ -125,7 +125,6 @@ export default function MozoPedidosActivos() {
                   actionText="Marcar Entregado"
                   actionIcon="✅"
                   loading={loadingId === p.id}
-                  disabled={p.estado !== 'listo'} // Solo se puede entregar si está listo
                 />
               ))}
             </tbody>
