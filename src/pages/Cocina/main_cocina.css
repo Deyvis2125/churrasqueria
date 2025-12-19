@@ -1,9 +1,43 @@
-/* Reset básico para el componente */
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg0: #050304;
+  --bg1: #0b0607;
+  --bg2: #120709;
+  --glass: rgba(18, 10, 12, 0.62);
+  --text: #f5f0ea;
+  --muted: rgba(245, 240, 234, 0.72);
+  --red: #7b1117;
+  --red2: #b11a22;
+  --gold: #d6a354;
+  --line: rgba(255, 255, 255, 0.1);
+  --line2: rgba(177, 26, 34, 0.25);
+  --shadow: 0 22px 70px rgba(0, 0, 0, 0.72);
+  --r: 18px;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  background: radial-gradient(1200px 650px at 15% 10%, rgba(177, 26, 34, 0.22), transparent 60%),
+    radial-gradient(900px 520px at 85% 15%, rgba(214, 163, 84, 0.16), transparent 65%),
+    radial-gradient(900px 520px at 50% 95%, rgba(123, 17, 23, 0.3), transparent 65%),
+    linear-gradient(180deg, var(--bg0), var(--bg1) 55%, var(--bg2));
+}
+
 .cocina-dashboard {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
-  min-height: 100vh;
-  padding: 20px;
+  width: min(1400px, calc(100% - 28px));
+  min-height: calc(100vh - 28px);
+  margin: 14px auto;
+  padding: 26px;
+  border-radius: calc(var(--r) + 6px);
+  background: var(--glass);
+  border: 1px solid var(--line2);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px) saturate(140%);
+  position: relative;
+  overflow: hidden;
 }
 
 .cocina-header {
@@ -12,169 +46,196 @@
 }
 
 .cocina-header h1 {
-  color: #2c3e50;
-  font-size: 2rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(48px, 5vw, 68px);
+  font-weight: 400;
+  color: var(--text);
+  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
 }
 
-/* Tablero de 3 columnas */
 .tablero {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  align-items: start; /* Para que las columnas no se estiren vacías */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
-/* Estilos de las Columnas */
 .columna {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  min-height: 500px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  min-height: 60vh;
 }
 
 .columna h2 {
+  font-family: "Cinzel", serif;
   text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.8px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #eee;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 20px 0;
 }
 
-.col-pendientes h2 { color: #e74c3c; }
-.col-preparando h2 { color: #f39c12; }
-.col-listos h2 { color: #27ae60; }
+.col-pendientes h2 {
+  color: var(--gold);
+}
+.col-listos h2 {
+  color: #6a9c42;
+}
 
-/* Tarjetas de Pedido */
+.lista-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .pedido-card {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .pedido-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
 }
 
 .card-header {
-  background: #34495e;
-  color: white;
-  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid var(--line2);
 }
 
 .mesa-badge {
-  font-weight: bold;
-  font-size: 1.1rem;
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--gold);
 }
 
 .hora {
-  font-size: 0.85rem;
-  opacity: 0.8;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .card-body {
-  padding: 15px;
+  padding: 16px;
 }
-
 .card-body ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .card-body li {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-size: 1rem;
-  border-bottom: 1px dashed #eee;
-  padding-bottom: 5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.card-body li strong {
+  color: var(--gold);
+  margin-right: 8px;
 }
 
 .nota {
-  background: #fff3cd;
-  padding: 5px;
+  background: rgba(214, 163, 84, 0.1);
+  border-left: 3px solid var(--gold);
+  padding: 10px;
   border-radius: 4px;
   font-size: 0.9rem;
-  color: #856404;
-  margin-top: 10px;
+  color: #d6a354;
+  margin-top: 12px;
 }
 
 .card-footer {
-  padding: 10px;
-  background: #f8f9fa;
-  text-align: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.15);
 }
 
-/* Botones de acción */
 .btn-accion {
   width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--text);
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  font-size: 14px;
   text-transform: uppercase;
-  transition: background 0.2s;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.btn-rojo { background-color: #e74c3c; }
-.btn-rojo:hover { background-color: #c0392b; }
-
-.btn-naranja { background-color: #f39c12; }
-.btn-naranja:hover { background-color: #d35400; }
-
-.btn-verde { background-color: #27ae60; }
-.btn-verde:hover { background-color: #2ecc71; }
-
-/* Responsive para celulares */
-@media (max-width: 900px) {
-  .tablero {
-    grid-template-columns: 1fr; /* Una sola columna en móviles */
-  }
+.btn-naranja {
+  background: linear-gradient(145deg, #d35400, #f39c12);
+  border-color: #f39c12;
+}
+.btn-naranja:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
 }
 
-/* Pantallas de Carga y Error */
-.pantalla-carga, .pantalla-error {
-  height: 100vh;
+.btn-verde {
+  background: linear-gradient(145deg, #27ae60, #2ecc71);
+  border-color: #2ecc71;
+}
+.btn-verde:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+}
+
+.pantalla-carga,
+.pantalla-error {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Segoe UI', sans-serif;
-  color: #333;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .pantalla-error h1 {
-  color: #e74c3c;
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+  font-family: "Cinzel", serif;
+  color: var(--red2);
 }
 
 .btn-volver {
   margin-top: 20px;
-  padding: 10px 20px;
-  background: #34495e;
+  padding: 12px 24px;
+  background: var(--red);
   color: white;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: background 0.2s;
+}
+.btn-volver:hover {
+  background: var(--red2);
 }
 
 .usuario-badge {
-  font-size: 0.8rem;
-  background: #333;
-  color: #fff;
-  padding: 5px 10px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+  padding: 6px 12px;
   border-radius: 15px;
   vertical-align: middle;
   margin-left: 10px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .tablero {
+    grid-template-columns: 1fr;
+  }
 }

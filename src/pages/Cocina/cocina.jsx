@@ -125,13 +125,7 @@ const Cocina = () => {
         <div className="columna col-pendientes">
           <h2>🔔 Pendientes</h2>
           <div className="lista-pedidos">
-            {pedidos.filter(p => p.estado === 'pendiente').map(p => renderPedido(p, '🔥 Cocinar', 'preparando', 'btn-rojo'))}
-          </div>
-        </div>
-        <div className="columna col-preparando">
-          <h2>🔥 Preparando</h2>
-          <div className="lista-pedidos">
-            {pedidos.filter(p => p.estado === 'preparando').map(p => renderPedido(p, '✅ Terminar', 'listo', 'btn-naranja'))}
+            {pedidos.filter(p => p.estado === 'pendiente').map(p => renderPedido(p, '✅ Listo', 'listo', 'btn-naranja'))}
           </div>
         </div>
         <div className="columna col-listos">

@@ -343,3 +343,43 @@
   .tab-btn{ min-width: 100%; }
   .actions-row{ grid-template-columns: 1fr; }
 }
+
+/* Tabla de Pedidos */
+.pedidos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  box-shadow: var(--shadow-sm);
+}
+
+.pedidos-table th,
+.pedidos-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.pedidos-table th {
+  background-color: rgba(255, 255, 255, 0.08);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+}
+
+.pedidos-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.pedidos-table ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.pedidos-table .big-btn {
+  padding: 12px 16px;
+  font-size: 14px;
+}
