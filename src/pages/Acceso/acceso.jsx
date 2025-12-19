@@ -20,6 +20,23 @@ export default function Acceso() {
       setLoading(false);
 
       if (!res.success) {
+        setMessage({ type: 'error', text: res.error || 'Error al iniciar sesión' });
+      } else {
+        setMessage({ type: 'success', text: 'Ingreso exitoso' });
+        console.log('Usuario autenticado:', res.user, 'rol:', res.role);
+        const role = (res.role || '').toString().toLowerCase();
+        if (role === 'admin' || role === 'administrador') {
+          navigate('/admin');
+          return;
+        }
+        if (role === 'mozo') {
+          navigate('/mozo');
+          return;
+        }
+        if (role === 'cocina') {
+          navigate('/cocina');
+          return;
+        }
         setMessage({
           type: "error",
           text: res.error || "Error al iniciar sesión",
