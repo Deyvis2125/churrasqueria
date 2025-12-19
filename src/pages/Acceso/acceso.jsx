@@ -24,10 +24,25 @@ export default function Acceso() {
       } else {
         setMessage({ type: 'success', text: 'Ingreso exitoso' });
         console.log('Usuario autenticado:', res.user, 'rol:', res.role);
-        const role = (res.role || '').toString().toLowerCase();
-        if (role === 'admin' || role === 'administrador') {
-          navigate('/admin');
-          return;
+        const role = (res.role || '').toString().trim().toLowerCase();
+        
+        switch (role) {
+          case 'admin':
+          case 'administrador':
+            navigate('/admin');
+            break;
+          case 'mozo':
+            navigate('/mozo');
+            break;
+          case 'cocina':
+            navigate('/cocina');
+            break;
+          case 'cajero':
+            navigate('/cajero');
+            break;
+          default:
+            setMessage({ type: 'error', text: `Rol no reconocido: ${res.role}` });
+            break;
         }
         if (role === 'mozo') {
           navigate('/mozo');
