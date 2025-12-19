@@ -23,9 +23,9 @@ const Cocina = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists() && docSnap.data().rol === 'cocina') {
-          setEsCocinero(true); // ✅ Es cocinero, pase usted
+          setEsCocinero(true); //  Es cocinero, pase usted
         } else {
-          setEsCocinero(false); // ⛔ No es cocinero (o no tiene rol)
+          setEsCocinero(false); // No es cocinero (o no tiene rol)
         }
       } else {
         setUsuario(null);

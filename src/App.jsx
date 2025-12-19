@@ -4,7 +4,8 @@ import Registro from './pages/Acceso/registro.jsx'
 import DashboardAdmin from './pages/admin/dasboard-admin.jsx'
 import Mozo from './pages/mozo/mozo.jsx'
 import AdminMesas from './pages/admin/admin-mesas.jsx'
-import DashboardCajero from './pages/cajero/dashboardcajero.jsx'
+import DashboardCajero from './pages/cajero/dasboardcajero.jsx'
+import Cocina from './pages/Cocina/cocina.jsx'
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +16,7 @@ function App() {
         <Route path="/admin" element={<DashboardAdmin />} />
         <Route path="/mozo" element={<Mozo />} />
         <Route path="/cajero" element={<DashboardCajero />} />
+        <Route path="/cocina" element={<Cocina />} />
         <Route path="/admin/mesas" element={<AdminMesas />} />
       </Routes>
     </BrowserRouter>
