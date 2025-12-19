@@ -87,7 +87,7 @@ export default function DashboardCajero() {
                   padding: 10,
                   borderRadius: 10,
                   border: "none",
-                  background: "#2a9d8f",
+                  background: "#33a598ff",
                   color: "#fff",
                   fontWeight: 700,
                   cursor: "pointer",
@@ -112,5 +112,6 @@ export default function DashboardCajero() {
         )}
       </div>
     </section>
+    
   );
 }
