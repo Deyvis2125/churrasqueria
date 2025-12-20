@@ -9,6 +9,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db, auth } from "../../firebase/config";
+import { useNavigate } from 'react-router-dom';
 import { logAudit, archiveDeletedEntity } from "../../services/auditService.js";
 import { BigButton, Card } from "./mozo.ui";
 
@@ -26,7 +27,7 @@ const formatDate = (timestamp) => {
 };
 
 // Componente para una fila de pedido (reutilizable)
-const PedidoRow = ({ pedido, onAction, actionText, actionIcon, loading, disabled }) => (
+const PedidoRow = ({ pedido, actions = [], loadingId }) => (
   <tr>
     <td>{pedido.mesaNumero}</td>
     <td>{formatDate(pedido.createdAt)}</td>
@@ -41,13 +42,17 @@ const PedidoRow = ({ pedido, onAction, actionText, actionIcon, loading, disabled
     </td>
     <td>S/ {pedido.total.toFixed(2)}</td>
     <td>
-      <BigButton
-        onClick={() => onAction(pedido)}
-        disabled={loading || disabled}
-        primary={!disabled}
-      >
-        {loading ? "Cargando..." : <>{actionIcon} {actionText}</>}
-      </BigButton>
+      {actions.map((a, i) => (
+        <BigButton
+          key={i}
+          onClick={() => a.onClick(pedido)}
+          disabled={(loadingId === pedido.id) || a.disabled}
+          primary={!!a.primary}
+          style={{ marginRight: 8 }}
+        >
+          {loadingId === pedido.id && a.showLoading ? 'Cargando...' : <>{a.icon} {a.text}</>}
+        </BigButton>
+      ))}
     </td>
   </tr>
 );
@@ -104,39 +109,13 @@ export default function MozoPedidosActivos() {
     }
   });
 
-  const eliminarPedido = (p) => handleAction(p, async (pedido) => {
-    const ok = confirm(`¿Eliminar el pedido de la Mesa ${pedido.mesaNumero} y liberar la mesa?`);
-    if (!ok) return;
+  // Los mozos no pueden eliminar pedidos desde aquí. La eliminación
+  // queda reservada para otros roles (p. ej. admin/cajero).
 
-    const batch = writeBatch(db);
-    // Archive before deleting
-    try {
-      await archiveDeletedEntity({ entityType: 'pedido', entityId: pedido.id, data: pedido, deletedBy: { id: auth.currentUser?.uid, name: auth.currentUser?.displayName } });
-    } catch (e) {
-      console.error('archiveDeletedEntity error', e);
-    }
-
-    batch.delete(doc(db, "pedidos", pedido.id));
-    if (pedido.mesaId) {
-      batch.update(doc(db, "mesa", pedido.mesaId), { disponible: true });
-    }
-    await batch.commit();
-
-    try {
-      await logAudit({
-        userId: auth.currentUser?.uid || null,
-        userName: auth.currentUser?.displayName || null,
-        userRole: 'mozo',
-        action: 'delete',
-        entityType: 'pedido',
-        entityId: pedido.id,
-        entityName: `Pedido Mesa ${pedido.mesaNumero}`,
-        oldValues: pedido,
-      });
-    } catch (e) {
-      console.error('logAudit error', e);
-    }
-  });
+  const navigate = useNavigate();
+  const editarPedido = (p) => {
+    navigate(`/mozo/editar-pedido/${p.id}`);
+  };
 
   return (
     <div className="pedidos-wrap">
@@ -160,10 +139,11 @@ export default function MozoPedidosActivos() {
                 <PedidoRow
                   key={p.id}
                   pedido={p}
-                  onAction={marcarEntregado}
-                  actionText="Marcar Entregado"
-                  actionIcon="✅"
-                  loading={loadingId === p.id}
+                  loadingId={loadingId}
+                  actions={[
+                    { onClick: marcarEntregado, text: 'Marcar Entregado', icon: '✅', primary: true, showLoading: true },
+                    { onClick: editarPedido, text: 'Editar', icon: '✏️' },
+                  ]}
                 />
               ))}
             </tbody>
@@ -183,19 +163,22 @@ export default function MozoPedidosActivos() {
                 <th>Fecha</th>
                 <th>Items</th>
                 <th>Total</th>
-                <th>Acción</th>
               </tr>
             </thead>
             <tbody>
               {pedidosEntregados.map((p) => (
-                <PedidoRow
-                  key={p.id}
-                  pedido={p}
-                  onAction={eliminarPedido}
-                  actionText="Eliminar y Liberar Mesa"
-                  actionIcon="🗑️"
-                  loading={loadingId === p.id}
-                />
+                <tr key={p.id}>
+                  <td>{p.mesaNumero}</td>
+                  <td>{formatDate(p.createdAt)}</td>
+                  <td>
+                    <ul>
+                      {(p.items || []).map((item, idx) => (
+                        <li key={idx}>{item.qty}x {item.plato}</li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td>S/ {p.total.toFixed(2)}</td>
+                </tr>
               ))}
             </tbody>
           </table>

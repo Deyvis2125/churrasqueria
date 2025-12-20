@@ -7,6 +7,7 @@ import Registro from './pages/Acceso/registro.jsx'
 import DashboardAdmin from './pages/admin/dasboard-admin.jsx'
 import AdminLogs from './pages/admin/logs.jsx'
 import Mozo from './pages/mozo/mozo.jsx'
+import EditarPedido from './pages/mozo/EditarPedido.jsx'
 import AdminMesas from './pages/admin/admin-mesas.jsx'
 import DashboardCajero from './pages/cajero/DashboardCajero.jsx'
 import Cocina from './pages/Cocina/cocina.jsx'
@@ -60,6 +61,14 @@ function AppRoutes() {
             <Mozo />
           </ProtectedRoute>
         } 
+      />
+      <Route 
+        path="/mozo/editar-pedido/:id"
+        element={
+          <ProtectedRoute allowedRoles={['mozo']} userRole={userRole}>
+            <EditarPedido />
+          </ProtectedRoute>
+        }
       />
       <Route 
         path="/cajero" 

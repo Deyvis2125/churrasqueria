@@ -4,6 +4,7 @@ import "./mozo.css";
 import MozoCrearPedido from "./MozoCrearPedido";
 import MozoPedidosActivos from "./MozoPedidosActivos";
 import { BigTabButton } from "./mozo.ui";
+import UserCard from "../../components/UserCard";
 
 export default function Mozo() {
   const [view, setView] = useState("crear"); // crear | pedidos
@@ -20,6 +21,9 @@ export default function Mozo() {
         <div className="mozo-title">
           <h1>Área del Mozo</h1>
           <p>Gestión rápida de pedidos y mesas</p>
+        </div>
+        <div style={{marginLeft: 'auto'}}>
+          <UserCard />
         </div>
       </header>
 

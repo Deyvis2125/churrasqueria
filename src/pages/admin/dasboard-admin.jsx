@@ -7,6 +7,7 @@ import AdminMesas from "./admin-mesas.jsx";
 import AdminUsersList from "./admin-users-list.jsx";
 import AdminMenusList from "./admin-ver-menu.jsx";
 import "./dashboard-admin.css";
+import UserCard from "../../components/UserCard";
 
 export default function DashboardAdmin() {
   const [tab, setTab] = useState("usuarios");
@@ -19,10 +20,13 @@ export default function DashboardAdmin() {
       <h1 className="dashboard-title">Admin Panel</h1>
 
       {/* 🔥 SUBTÍTULO MÁS PROFESIONAL */}
-      <p className="dashboard-welcome">
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+        <p className="dashboard-welcome">
         Panel de administración del restaurante. Selecciona una opción para
         gestionar el sistema.
-      </p>
+        </p>
+        <UserCard />
+      </div>
 
       <nav className="dashboard-nav">
         <button className="nav-button" onClick={() => setTab("usuarios")}>

@@ -3,6 +3,7 @@ import { db, auth } from '../../firebase/config';
 import { collection, query, onSnapshot, doc, getDoc, orderBy, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import './main_cocina.css';
+import UserCard from '../../components/UserCard';
 
 const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -94,7 +95,10 @@ const Cocina = () => {
   return (
     <div className="cocina-dashboard">
       <header className="cocina-header">
-        <h1>👨‍🍳 Monitor de Cocina <span className="usuario-badge">{usuario.email}</span></h1>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <h1>👨‍🍳 Monitor de Cocina <span className="usuario-badge">{usuario.email}</span></h1>
+          <UserCard />
+        </div>
       </header>
 
       <div className="tablero-solo">
