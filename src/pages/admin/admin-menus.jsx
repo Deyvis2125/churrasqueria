@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebase/config"; // ajusta la ruta si es necesario
+import { db, auth } from "../../firebase/config"; // ajusta la ruta si es necesario
+import { logAudit } from "../../services/auditService.js";
 import { uploadImageToCloudinary } from "../../services/cloudinary.js";
 
 export default function AdminMenus() {
@@ -23,11 +24,26 @@ export default function AdminMenus() {
 
       const imageUrl = await uploadImageToCloudinary(image);
 
-    await addDoc(collection(db, "menus"), {
+    const docRef = await addDoc(collection(db, "menus"), {
       plato: name,
       precio: Number(price),
       img: imageUrl,
     });
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'admin',
+        action: 'create',
+        entityType: 'menu',
+        entityId: docRef.id,
+        entityName: name,
+        newValues: { plato: name, precio: Number(price) },
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
 
       // 3️⃣ Limpiar formulario
       setName("");

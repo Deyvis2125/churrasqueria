@@ -5,7 +5,8 @@ import {
   onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, auth } from "../../firebase/config";
+import { logAudit } from "../../services/auditService.js";
 
 export default function PedidoModal({ mesa, mozoId, onClose }) {
   const [menus, setMenus] = useState([]);
@@ -30,7 +31,7 @@ export default function PedidoModal({ mesa, mozoId, onClose }) {
       return;
     }
 
-    await addDoc(collection(db, "pedidos"), {
+    const docRef = await addDoc(collection(db, "pedidos"), {
       mesaId: mesa.id,
       mesaNumero: mesa.numero,
       mozoId,
@@ -42,6 +43,22 @@ export default function PedidoModal({ mesa, mozoId, onClose }) {
       estado: "abierto",
       createdAt: serverTimestamp(),
     });
+
+    // Registrar auditoría
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || mozoId || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'mozo',
+        action: 'create',
+        entityType: 'pedido',
+        entityId: docRef.id,
+        entityName: `Pedido Mesa ${mesa.numero}`,
+        newValues: { mesaId: mesa.id, mesaNumero: mesa.numero, total },
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
 
     onClose();
   };

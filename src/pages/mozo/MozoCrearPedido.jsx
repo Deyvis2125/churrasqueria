@@ -9,7 +9,8 @@ import {
   serverTimestamp,
   writeBatch,
 } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, auth } from "../../firebase/config";
+import { logAudit } from "../../services/auditService.js";
 import { BigButton, Card, Pill } from "./mozo.ui"; // si tu archivo es mozo.ui.jsx, también sirve
 
 export default function MozoCrearPedido({ mozoId = null }) {
@@ -125,6 +126,22 @@ export default function MozoCrearPedido({ mozoId = null }) {
       batch.update(mesaRef, { disponible: false });
 
       await batch.commit();
+
+      // Auditoría: registrar creación de pedido
+      try {
+        await logAudit({
+          userId: auth.currentUser?.uid || mozoId || null,
+          userName: auth.currentUser?.displayName || null,
+          userRole: 'mozo',
+          action: 'create',
+          entityType: 'pedido',
+          entityId: pedidoRef.id,
+          entityName: `Pedido Mesa ${mesa.numero}`,
+          newValues: pedidoData,
+        });
+      } catch (e) {
+        console.error('logAudit error', e);
+      }
 
       alert("Pedido enviado ✅ Mesa ocupada ✅");
       limpiar();

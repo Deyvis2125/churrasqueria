@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Acceso from './pages/Acceso/acceso.jsx'
 import Registro from './pages/Acceso/registro.jsx'
 import DashboardAdmin from './pages/admin/dasboard-admin.jsx'
+import AdminLogs from './pages/admin/logs.jsx'
 import Mozo from './pages/mozo/mozo.jsx'
 import AdminMesas from './pages/admin/admin-mesas.jsx'
 import DashboardCajero from './pages/cajero/DashboardCajero.jsx'
@@ -41,6 +42,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
             <AdminMesas />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/logs" 
+        element={
+          <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+            <AdminLogs />
           </ProtectedRoute>
         } 
       />

@@ -5,7 +5,8 @@ import {
   serverTimestamp,
   writeBatch,
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, auth } from "../firebase/config";
+import { logAudit } from "./auditService.js";
 
 /**
  * COBRAR pedido:
@@ -57,6 +58,21 @@ export async function cobrarPedidoYGuardarHistorial(pedidoId, cajeroId = null) {
   }
 
   await batch.commit();
+  // Auditoría: registrar movimiento de caja / cobro
+  try {
+    await logAudit({
+      userId: cajeroId || auth.currentUser?.uid || null,
+      userName: auth.currentUser?.displayName || null,
+      userRole: 'cajero',
+      action: 'create',
+      entityType: 'historial_ventas',
+      entityId: histRef.id,
+      entityName: `Venta Pedido ${pedidoId}`,
+      newValues: historialData,
+    });
+  } catch (e) {
+    console.error('logAudit error', e);
+  }
 
   return { ok: true, historialId: histRef.id };
 }

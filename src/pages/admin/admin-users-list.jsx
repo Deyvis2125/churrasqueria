@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, auth } from "../../firebase/config";
+import { archiveDeletedEntity, logAudit } from "../../services/auditService.js";
 
 export default function AdminUsersList() {
   const [users, setUsers] = useState([]);
@@ -26,7 +27,30 @@ export default function AdminUsersList() {
 
   const handleDelete = async (id) => {
     if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+      // Archive user data then delete
+      try {
+        // fetch? we rely on current state
+        const userData = users.find(u => u.id === id) || null;
+        await archiveDeletedEntity({ entityType: 'user', entityId: id, data: userData, deletedBy: { id: auth.currentUser?.uid, name: auth.currentUser?.displayName } });
+      } catch (e) {
+        console.error('archiveDeletedEntity error', e);
+      }
+
       await deleteDoc(doc(db, "users", id));
+
+      try {
+        await logAudit({
+          userId: auth.currentUser?.uid || null,
+          userName: auth.currentUser?.displayName || null,
+          userRole: 'admin',
+          action: 'delete',
+          entityType: 'user',
+          entityId: id,
+          entityName: null,
+        });
+      } catch (e) {
+        console.error('logAudit error', e);
+      }
     }
   };
 
@@ -38,11 +62,28 @@ export default function AdminUsersList() {
   };
 
   const handleSave = async (id) => {
+    const oldUser = users.find(u => u.id === id) || null;
     await updateDoc(doc(db, "users", id), {
       nombre: editNombre,
       email: editEmail,
       rol: editRol
     });
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'admin',
+        action: 'update',
+        entityType: 'user',
+        entityId: id,
+        entityName: editNombre,
+        oldValues: oldUser,
+        newValues: { nombre: editNombre, email: editEmail, rol: editRol },
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
     setEditingUser(null);
   };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 import AdminUsers from "./admin-users.jsx";
 import AdminMenus from "./admin-menus.jsx";
 import AdminSales from "./admin-sales.jsx";
@@ -10,6 +11,7 @@ import "./dashboard-admin.css";
 export default function DashboardAdmin() {
   const [tab, setTab] = useState("usuarios");
   const [subTab, setSubTab] = useState("crear");
+  const navigate = useNavigate()
 
   return (
     <div className="dashboard-container">
@@ -41,6 +43,9 @@ export default function DashboardAdmin() {
 
         <button className="nav-button" onClick={() => setTab("mesas")}>
           Mesas
+        </button>
+        <button className="nav-button" onClick={() => navigate('/admin/logs')}>
+          Logs
         </button>
       </nav>
 

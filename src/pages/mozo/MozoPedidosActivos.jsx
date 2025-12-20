@@ -8,7 +8,8 @@ import {
   doc,
   writeBatch,
 } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, auth } from "../../firebase/config";
+import { logAudit, archiveDeletedEntity } from "../../services/auditService.js";
 import { BigButton, Card } from "./mozo.ui";
 
 // Helper para formatear fecha
@@ -85,6 +86,22 @@ export default function MozoPedidosActivos() {
   
   const marcarEntregado = (p) => handleAction(p, async (pedido) => {
     await updateDoc(doc(db, "pedidos", pedido.id), { estado: "entregado" });
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'mozo',
+        action: 'update',
+        entityType: 'pedido',
+        entityId: pedido.id,
+        entityName: `Pedido Mesa ${pedido.mesaNumero}`,
+        oldValues: { estado: 'pendiente' },
+        newValues: { estado: 'entregado' },
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
   });
 
   const eliminarPedido = (p) => handleAction(p, async (pedido) => {
@@ -92,11 +109,33 @@ export default function MozoPedidosActivos() {
     if (!ok) return;
 
     const batch = writeBatch(db);
+    // Archive before deleting
+    try {
+      await archiveDeletedEntity({ entityType: 'pedido', entityId: pedido.id, data: pedido, deletedBy: { id: auth.currentUser?.uid, name: auth.currentUser?.displayName } });
+    } catch (e) {
+      console.error('archiveDeletedEntity error', e);
+    }
+
     batch.delete(doc(db, "pedidos", pedido.id));
     if (pedido.mesaId) {
       batch.update(doc(db, "mesa", pedido.mesaId), { disponible: true });
     }
     await batch.commit();
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'mozo',
+        action: 'delete',
+        entityType: 'pedido',
+        entityId: pedido.id,
+        entityName: `Pedido Mesa ${pedido.mesaNumero}`,
+        oldValues: pedido,
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
   });
 
   return (

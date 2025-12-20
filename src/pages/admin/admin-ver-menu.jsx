@@ -8,7 +8,8 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, auth } from "../../firebase/config";
+import { archiveDeletedEntity, logAudit } from "../../services/auditService.js";
 
 export default function AdminMenusList() {
   const [menus, setMenus] = useState([]);
@@ -39,7 +40,28 @@ export default function AdminMenusList() {
     if (!ok) return;
 
     try {
+      // Archive and then delete
+      try {
+        await archiveDeletedEntity({ entityType: 'menu', entityId: id, data: null, deletedBy: { id: auth.currentUser?.uid, name: auth.currentUser?.displayName } });
+      } catch (e) {
+        console.error('archiveDeletedEntity error', e);
+      }
       await deleteDoc(doc(db, "menus", id));
+
+      try {
+        await logAudit({
+          userId: auth.currentUser?.uid || null,
+          userName: auth.currentUser?.displayName || null,
+          userRole: 'admin',
+          action: 'delete',
+          entityType: 'menu',
+          entityId: id,
+          entityName: plato,
+        });
+      } catch (e) {
+        console.error('logAudit error', e);
+      }
+
       alert("Menú eliminado");
     } catch (e) {
       console.error(e);

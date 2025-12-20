@@ -11,7 +11,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { db } from "../../firebase/config"; // ajusta si tu export es diferente
+import { db, auth } from "../../firebase/config"; // ajusta si tu export es diferente
+import { logAudit, archiveDeletedEntity } from "../../services/auditService.js";
 
 export default function AdminMesas() {
   const [mesas, setMesas] = useState([]);
@@ -46,11 +47,26 @@ export default function AdminMesas() {
     const yaExiste = mesas.some((m) => Number(m.numero) === num);
     if (yaExiste) return alert(`La mesa ${num} ya existe.`);
 
-    await addDoc(collection(db, "mesa"), {
+    const docRef = await addDoc(collection(db, "mesa"), {
       numero: num,
       disponible: true,
       createdAt: serverTimestamp(),
     });
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'admin',
+        action: 'create',
+        entityType: 'mesa',
+        entityId: docRef.id,
+        entityName: `Mesa ${num}`,
+        newValues: { numero: num, disponible: true },
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
 
     setNumero("");
   };
@@ -59,12 +75,49 @@ export default function AdminMesas() {
     await updateDoc(doc(db, "mesa", mesa.id), {
       disponible: !mesa.disponible,
     });
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'admin',
+        action: 'update',
+        entityType: 'mesa',
+        entityId: mesa.id,
+        entityName: `Mesa ${mesa.numero}`,
+        oldValues: { disponible: mesa.disponible },
+        newValues: { disponible: !mesa.disponible },
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
   };
 
   const eliminarMesa = async (mesa) => {
     const ok = confirm(`¿Eliminar la mesa ${mesa.numero}?`);
     if (!ok) return;
+    try {
+      await archiveDeletedEntity({ entityType: 'mesa', entityId: mesa.id, data: mesa, deletedBy: { id: auth.currentUser?.uid, name: auth.currentUser?.displayName } });
+    } catch (e) {
+      console.error('archiveDeletedEntity error', e);
+    }
+
     await deleteDoc(doc(db, "mesa", mesa.id));
+
+    try {
+      await logAudit({
+        userId: auth.currentUser?.uid || null,
+        userName: auth.currentUser?.displayName || null,
+        userRole: 'admin',
+        action: 'delete',
+        entityType: 'mesa',
+        entityId: mesa.id,
+        entityName: `Mesa ${mesa.numero}`,
+        oldValues: mesa,
+      });
+    } catch (e) {
+      console.error('logAudit error', e);
+    }
   };
 
   return (
