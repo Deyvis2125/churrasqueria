@@ -2,12 +2,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { cobrarPedidoYGuardarHistorial } from "../../services/historial-ventas";
+import BoletaModal from "./BoletaModal"; // 1. Importar el nuevo modal
 
 const money = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
 
 export default function CajeroEntregados() {
   const [pedidos, setPedidos] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  
+  const [showModal, setShowModal] = useState(false);
+  const [pedidoACobrar, setPedidoACobrar] = useState(null);
 
   useEffect(() => {
     const qRef = query(collection(db, "pedidos"), orderBy("createdAt", "asc"));
@@ -21,12 +25,20 @@ export default function CajeroEntregados() {
     [pedidos]
   );
 
-  const cobrar = async (p) => {
+  const iniciarCobro = (p) => {
+    setPedidoACobrar(p);
+    setShowModal(true);
+  };
+
+  const handlePagoConfirmado = async (datosPago) => {
+    if (!pedidoACobrar) return;
+
     try {
-      setLoadingId(p.id);
+      setLoadingId(pedidoACobrar.id);
+      setShowModal(false);
 
       const cajeroId = auth.currentUser?.uid || null;
-      await cobrarPedidoYGuardarHistorial(p.id, cajeroId);
+      await cobrarPedidoYGuardarHistorial(pedidoACobrar.id, cajeroId, datosPago);
 
       alert("✅ Cobrado: guardado en historial y mesa liberada.");
     } catch (e) {
@@ -34,7 +46,13 @@ export default function CajeroEntregados() {
       alert("❌ " + (e.message || "No se pudo cobrar"));
     } finally {
       setLoadingId(null);
+      setPedidoACobrar(null);
     }
+  };
+
+  const handleCancelarPago = () => {
+    setShowModal(false);
+    setPedidoACobrar(null);
   };
 
   return (
@@ -43,6 +61,15 @@ export default function CajeroEntregados() {
       <p style={{ opacity: 0.8 }}>
         Al cobrar se guarda en <b>historial_ventas</b> y se libera la mesa.
       </p>
+
+      {/* 2. Renderizado del nuevo modal */}
+      {showModal && pedidoACobrar && (
+        <BoletaModal
+          pedido={pedidoACobrar} // 3. Pasar el objeto de pedido completo
+          onCancelar={handleCancelarPago}
+          onPagoConfirmado={handlePagoConfirmado}
+        />
+      )}
 
       {entregados.length === 0 ? (
         <p style={{ opacity: 0.8 }}>No hay pedidos entregados.</p>
@@ -78,7 +105,7 @@ export default function CajeroEntregados() {
               </div>
 
               <button
-                onClick={() => cobrar(p)}
+                onClick={() => iniciarCobro(p)}
                 disabled={loadingId === p.id}
                 style={{
                   marginTop: 12,
@@ -90,7 +117,7 @@ export default function CajeroEntregados() {
                   cursor: "pointer",
                 }}
               >
-                {loadingId === p.id ? "Cobrando..." : "💳 COBRAR (pasar a CANCELADO)"}
+                {loadingId === p.id ? "Procesando..." : "💳 COBRAR"}
               </button>
             </div>
           ))}
