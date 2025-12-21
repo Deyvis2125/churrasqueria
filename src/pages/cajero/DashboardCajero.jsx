@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CajeroEntregados from "./CajeroEntregados";
-import HistorialVentas from "./historialventas";
+import CierreDia from "./CierreDia";
 import "./dashboard-cajero.css";
 
 export default function DashboardCajero() {
@@ -24,15 +24,15 @@ export default function DashboardCajero() {
         </button>
 
         <button
-          className={`cajero-btn ${tab === "historial" ? "active" : ""}`}
-          onClick={() => setTab("historial")}
+          className={`cajero-btn ${tab === "cierre" ? "active" : ""}`}
+          onClick={() => setTab("cierre")}
         >
           📊 Cierre del día
         </button>
       </nav>
 
       <main className="cajero-main">
-        {tab === "entregados" ? <CajeroEntregados /> : <HistorialVentas />}
+        {tab === "entregados" ? <CajeroEntregados /> : <CierreDia />}
       </main>
     </section>
   );

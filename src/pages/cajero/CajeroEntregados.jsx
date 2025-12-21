@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import { cobrarPedidoYGuardarHistorial } from "../../services/historial-ventas";
+import { cobrarPedidoYGuardarHistorial, markComprobantePrinted } from "../../services/historial-ventas";
+import { generateBoletaPDF } from "../../services/printService";
 import BoletaModal from "./BoletaModal"; // 1. Importar el nuevo modal
 
 const money = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
@@ -38,9 +39,40 @@ export default function CajeroEntregados() {
       setShowModal(false);
 
       const cajeroId = auth.currentUser?.uid || null;
-      await cobrarPedidoYGuardarHistorial(pedidoACobrar.id, cajeroId, datosPago, reservationId);
+      const res = await cobrarPedidoYGuardarHistorial(pedidoACobrar.id, cajeroId, datosPago, reservationId);
 
-      alert("✅ Cobrado: guardado en historial y mesa liberada.");
+      // Generar PDF y descargar localmente
+      try {
+        const blob = await generateBoletaPDF(datosPago, { 
+          series: res.series, 
+          number: res.number, 
+          cajeroId: cajeroId, 
+          cajeroName: auth.currentUser?.displayName 
+        });
+
+        // Descargar PDF localmente de inmediato (desde blob)
+        const blobUrl = URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = `Boleta_${res.series || 'B001'}_${res.number || ''}.pdf`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(blobUrl);
+        console.log('✅ PDF descargado localmente');
+
+        // Marcar impreso (sin subir a Storage por ahora para evitar CORS)
+        try {
+          await markComprobantePrinted(res.historialId, cajeroId);
+          console.log('✅ Historial marcado como impreso');
+        } catch (markError) {
+          console.warn('Advertencia al marcar impreso:', markError);
+        }
+      } catch (pdfError) {
+        console.error('Error generando PDF:', pdfError);
+      }
+
+      alert("✅ Cobrado: guardado en historial, mesa liberada y boleta descargada.");
     } catch (e) {
       console.error(e);
       alert("❌ " + (e.message || "No se pudo cobrar"));

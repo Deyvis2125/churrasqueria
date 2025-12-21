@@ -289,3 +289,185 @@ body{
   max-width: 1100px;   /* ✅ centrado */
   margin: 0 auto;
 }
+
+/* ========== CIERRE DEL DÍA ========== */
+.cierre-wrap {
+  width: 100%;
+}
+
+.cierre-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.cierre-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cierre-sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.cierre-metrics {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.cierre-pill {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: var(--r);
+  border: 1px solid var(--strokeRed);
+  background: rgba(177, 26, 34, 0.12);
+  font-size: 13px;
+  color: var(--text);
+}
+
+.cierre-pill b {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.cierre-pill.muted {
+  border-color: var(--stroke);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+}
+
+.cierre-empty {
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: var(--r);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--stroke);
+  color: var(--muted);
+}
+
+.cierre-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 24px;
+  border-radius: var(--r);
+  border: 1px solid var(--stroke);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cierre-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.cierre-table thead {
+  background: rgba(177, 26, 34, 0.08);
+  border-bottom: 1px solid var(--stroke);
+}
+
+.cierre-table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cierre-table td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.cierre-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cierre-hora {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.cierre-serie {
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.cierre-monto {
+  font-weight: 600;
+  color: var(--gold);
+  text-align: right;
+}
+
+.cierre-pago {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.cierre-items {
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cierre-acciones {
+  text-align: center;
+}
+
+.cierre-btn-reimprimir {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--stroke);
+  background: rgba(214, 163, 84, 0.12);
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.cierre-btn-reimprimir:hover:not(:disabled) {
+  background: rgba(214, 163, 84, 0.24);
+  border-color: var(--gold);
+  transform: scale(1.05);
+}
+
+.cierre-btn-reimprimir:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cierre-footer {
+  padding: 16px;
+  border-radius: var(--r);
+  background: rgba(177, 26, 34, 0.08);
+  border: 1px solid var(--strokeRed);
+}
+
+.cierre-nota {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.cierre-nota strong {
+  color: var(--text);
+}
+

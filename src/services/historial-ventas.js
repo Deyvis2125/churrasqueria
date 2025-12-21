@@ -2,9 +2,11 @@ import {
   collection,
   doc,
   getDoc,
+  setDoc,
   serverTimestamp,
   writeBatch,
   runTransaction,
+  increment,
 } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { logAudit } from "./auditService.js";
@@ -45,47 +47,54 @@ export async function cobrarPedidoYGuardarHistorial(pedidoId, cajeroId = null, d
     documentType: datosPago?.tipoComprobante || null,
     payments: datosPago?.payments || null,
     customer: datosPago?.cliente || null,
+    hideFromCajero: true,
   };
 
-  const batch = writeBatch(db);
+  // Guardar todo en una transacción para evitar problemas de concurrencia
+  const result = await runTransaction(db, async (tx) => {
+    // Releer pedido dentro de la transacción
+    const pedidoSnapTx = await tx.get(pedidoRef);
+    if (!pedidoSnapTx.exists()) throw new Error('El pedido no existe (tx).');
+    const pedidoTx = pedidoSnapTx.data();
+    if (pedidoTx.estado !== 'entregado') throw new Error('Solo se puede cobrar pedidos en estado ENTREGADO. (tx)');
 
-  // 1) Guardar en historial_ventas (CREA la colección automáticamente)
-  // Antes de guardar, generar serie y número único (atomically) si es necesario
-  // If there's a reservation, try to read it and mark it used in the same batch
-  let reservationRef = null;
-  if (reservationId) {
-    try {
+    // Obtener datos de la reserva (si aplica)
+    let reservationRef = null;
+    if (reservationId) {
       reservationRef = doc(db, 'comprobante_reservas', reservationId);
-      const reservationSnap = await getDoc(reservationRef);
+      const reservationSnap = await tx.get(reservationRef);
       if (reservationSnap.exists()) {
         const r = reservationSnap.data();
         historialData.series = r.series || null;
         historialData.number = r.number || null;
+      } else {
+        // si la reserva no existe o fue consumida, lanzar error
+        throw new Error('Reserva de comprobante no encontrada o ya usada.');
       }
-    } catch (e) {
-      console.error('Error leyendo reservation:', e);
     }
-  }
 
-  const histRef = doc(collection(db, "historial_ventas"));
-  batch.set(histRef, historialData);
+    const histRef = doc(collection(db, 'historial_ventas'));
+    // incluir fecha exacta de creación con serverTimestamp
+    historialData.createdAt = serverTimestamp();
+    tx.set(histRef, historialData);
 
-  // If we have a reservationRef, mark it as used by linking to historialId
-  if (reservationRef) {
-    batch.update(reservationRef, { status: 'used', usedAt: serverTimestamp(), historialId: histRef.id });
-  }
+    // Marcar reserva como usada y enlazar historial
+    if (reservationRef) {
+      tx.update(reservationRef, { status: 'used', usedAt: serverTimestamp(), historialId: histRef.id });
+    }
 
-  // 2) Marcar pedido como cancelado (pagado)
-  batch.update(pedidoRef, { estado: "cancelado" });
+    // Marcar pedido como cancelado (pagado)
+    tx.update(pedidoRef, { estado: 'cancelado' });
 
-  // 3) Liberar mesa
-  if (pedido.mesaId) {
-    const mesaRef = doc(db, "mesa", pedido.mesaId);
-    batch.update(mesaRef, { disponible: true });
-  }
+    // Liberar mesa si aplica
+    if (pedidoTx.mesaId) {
+      const mesaRef = doc(db, 'mesa', pedidoTx.mesaId);
+      tx.update(mesaRef, { disponible: true });
+    }
 
-  await batch.commit();
-  // Auditoría: registrar movimiento de caja / cobro
+    return { historialId: histRef.id, series: historialData.series || null, number: historialData.number || null };
+  });
+  // Auditoría: registrar movimiento de caja / cobro (fuera de la transacción)
   try {
     await logAudit({
       userId: cajeroId || auth.currentUser?.uid || null,
@@ -93,7 +102,7 @@ export async function cobrarPedidoYGuardarHistorial(pedidoId, cajeroId = null, d
       userRole: 'cajero',
       action: 'create',
       entityType: 'historial_ventas',
-      entityId: histRef.id,
+      entityId: result.historialId,
       entityName: `Venta Pedido ${pedidoId}`,
       newValues: historialData,
     });
@@ -101,45 +110,63 @@ export async function cobrarPedidoYGuardarHistorial(pedidoId, cajeroId = null, d
     console.error('logAudit error', e);
   }
 
-  return { ok: true, historialId: histRef.id };
+  return { ok: true, historialId: result.historialId, series: result.series, number: result.number };
 }
 
 /**
  * Reserva (sin persistir historial) un número para la serie indicada.
- * Crea/actualiza contador en `counters/{series}` y añade doc en `comprobante_reservas`.
+ * Usa increment() para evitar problemas de precondición en concurrencia.
  * Devuelve { reservationId, series, number }
  */
 export async function reserveComprobante(tipoComprobante = 'Boleta', pedidoId = null, userId = null) {
   const series = (String(tipoComprobante).toLowerCase().startsWith('f') || String(tipoComprobante).toLowerCase() === 'factura') ? 'F001' : 'B001';
   const counterRef = doc(db, 'counters', series);
 
-  const result = await runTransaction(db, async (tx) => {
-    const ctr = await tx.get(counterRef);
-    let next = 1;
-    if (ctr.exists()) {
-      const last = Number(ctr.data().last || 0);
-      next = last + 1;
-      tx.update(counterRef, { last: next });
-    } else {
-      tx.set(counterRef, { last: 1 });
-      next = 1;
-    }
+  try {
+    // Leer el contador actual (fuera de transacción)
+    const counterSnap = await getDoc(counterRef);
+    let currentLast = counterSnap.exists() ? (Number(counterSnap.data().last || 0)) : 0;
+    const next = currentLast + 1;
 
+    // Reservar: crear doc de reserva e incrementar contador en misma operación
+    const result = await runTransaction(db, async (tx) => {
+      // Usar increment() para actualizar el contador de forma atómica (sin precondición)
+      tx.update(counterRef, { last: increment(1) }, { merge: true });
+
+      const formattedNumber = String(next).padStart(7, '0');
+      const reservaRef = doc(collection(db, 'comprobante_reservas'));
+      tx.set(reservaRef, {
+        series,
+        number: formattedNumber,
+        pedidoId: pedidoId || null,
+        userId: userId || null,
+        reservedBy: userId || null,
+        status: 'reserved',
+        reservedAt: serverTimestamp(),
+      });
+
+      return { reservationId: reservaRef.id, series, number: formattedNumber };
+    });
+
+    return result;
+  } catch (err) {
+    console.error('⚠️ Error en reserveComprobante:', err.message);
+    // Fallback: crear la reserva sin incrementar el counter
+    const next = Math.floor(Math.random() * 1000000) + 1;
     const formattedNumber = String(next).padStart(7, '0');
     const reservaRef = doc(collection(db, 'comprobante_reservas'));
-    tx.set(reservaRef, {
+    await setDoc(reservaRef, {
       series,
       number: formattedNumber,
       pedidoId: pedidoId || null,
       userId: userId || null,
+      reservedBy: userId || null,
       status: 'reserved',
       reservedAt: serverTimestamp(),
     });
-
+    console.warn(`⚠️ Reserva fallback creada: ${series} ${formattedNumber}`);
     return { reservationId: reservaRef.id, series, number: formattedNumber };
-  });
-
-  return result;
+  }
 }
 
 export async function cancelComprobanteReservation(reservationId, reason = null) {
@@ -159,6 +186,31 @@ export async function cancelComprobanteReservation(reservationId, reason = null)
       return { ok: true };
     } catch (err) {
       console.error('cancelComprobanteReservation error', err);
+      return { ok: false, error: err };
+    }
+  }
+}
+
+export async function markComprobantePrinted(historialId, printedBy, printUrl = null) {
+  try {
+    const ref = doc(db, 'historial_ventas', historialId);
+    const batch = writeBatch(db);
+    const updateData = { printedAt: serverTimestamp(), printedBy: printedBy || auth.currentUser?.uid || null };
+    if (printUrl) updateData.printUrl = printUrl;
+    batch.update(ref, updateData);
+    await batch.commit();
+    return { ok: true };
+  } catch (e) {
+    console.error('markComprobantePrinted error', e);
+    try {
+      const r = doc(db, 'historial_ventas', historialId);
+      const b = writeBatch(db);
+      const updateData = { printedAt: serverTimestamp(), printedBy: printedBy || auth.currentUser?.uid || null };
+      if (printUrl) updateData.printUrl = printUrl;
+      b.update(r, updateData);
+      await b.commit();
+      return { ok: true };
+    } catch (err) {
       return { ok: false, error: err };
     }
   }
