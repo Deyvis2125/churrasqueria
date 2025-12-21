@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import './BoletaModal.css';
 import { findClienteByDocument, createOrUpdateCliente } from '../../services/clienteService';
+import { reserveComprobante, cancelComprobanteReservation } from '../../services/historial-ventas';
 
 const money = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
 
@@ -34,6 +35,32 @@ const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
     const impuesto = total - sub;
     return { subtotal: sub, igv: impuesto };
   }, [total]);
+
+  const [reservation, setReservation] = useState(null);
+  const displaySeries = reservation?.series || (tipoComprobante === 'Boleta' ? 'B001' : 'F001');
+  const displayNumber = reservation?.number || 'Se asignará al confirmar';
+
+  // Reservar número al abrir modal y al cambiar tipo de comprobante
+  React.useEffect(() => {
+    let mounted = true;
+    const doReserve = async () => {
+      try {
+        // cancelar previa si existe
+        if (reservation && reservation.reservationId) {
+          await cancelComprobanteReservation(reservation.reservationId, 're-reserve');
+        }
+        const res = await reserveComprobante(tipoComprobante, pedido?.id || null, null);
+        if (mounted) setReservation(res);
+      } catch (e) {
+        console.error('Reserva error', e);
+      }
+    };
+
+    doReserve();
+
+    return () => { mounted = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tipoComprobante]);
 
   // Calcular monto pendiente
   const montoPagado = useMemo(() => {
@@ -233,7 +260,18 @@ const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
       fecha: new Date()
     };
 
-    onPagoConfirmado(datosPago);
+    // Pasar reservationId para que el servicio marque la reserva como usada y guarde serie/numero
+    const reservationId = reservation?.reservationId || null;
+    await onPagoConfirmado(datosPago, reservationId);
+  };
+
+  const handleCancelarModal = async () => {
+    try {
+      if (reservation?.reservationId) await cancelComprobanteReservation(reservation.reservationId);
+    } catch (e) {
+      console.error('Error cancelling reservation', e);
+    }
+    onCancelar();
   };
 
   return (
@@ -261,9 +299,9 @@ const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
           </div>
           <div className="header-line">{'─'.repeat(60)}</div>
 
-          {/* Series y número */}
+          {/* Series y número (generados automáticamente al confirmar) */}
           <div className="serie-numero">
-            <span>Serie: B001 - Nro: 0004589</span>
+            <span>Serie: {displaySeries} - Nro: {displayNumber}</span>
           </div>
           <div className="header-line">{'─'.repeat(60)}</div>
 
@@ -576,7 +614,7 @@ const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
 
         {/* Acciones */}
         <footer className="boleta-acciones-pro">
-          <button onClick={onCancelar} className="cancelar-btn">Cancelar</button>
+          <button onClick={handleCancelarModal} className="cancelar-btn">Cancelar</button>
           <button 
             onClick={handleConfirmar} 
             className="confirmar-btn"

@@ -30,7 +30,7 @@ export default function CajeroEntregados() {
     setShowModal(true);
   };
 
-  const handlePagoConfirmado = async (datosPago) => {
+  const handlePagoConfirmado = async (datosPago, reservationId = null) => {
     if (!pedidoACobrar) return;
 
     try {
@@ -38,7 +38,7 @@ export default function CajeroEntregados() {
       setShowModal(false);
 
       const cajeroId = auth.currentUser?.uid || null;
-      await cobrarPedidoYGuardarHistorial(pedidoACobrar.id, cajeroId, datosPago);
+      await cobrarPedidoYGuardarHistorial(pedidoACobrar.id, cajeroId, datosPago, reservationId);
 
       alert("✅ Cobrado: guardado en historial y mesa liberada.");
     } catch (e) {
