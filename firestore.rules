@@ -1,89 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isSignedIn() { return request.auth != null; }
-    function isAdmin() { return isSignedIn() && (request.auth.token.admin == true || request.auth.token.role == 'admin'); }
-    function isCajero() { return isSignedIn() && request.auth.token.role == 'cajero'; }
-
-    // historial_ventas: crear (cajero), actualizar solo metadata impresión (mismo cajero/admin),
-    // leer: admin ve todo; cajero solo sus propios registros (no hideFromCajero)
-    match /historial_ventas/{docId} {
-      allow create: if isSignedIn()
-        && request.resource.data.cajeroId == request.auth.uid
-        && request.resource.data.series is string
-        && request.resource.data.number is int;
-
-      allow update: if isAdmin() || (
-        isSignedIn()
-        && resource.data.cajeroId == request.auth.uid
-        // Permitir solo actualizar metadata de impresión
-        && (
-          request.resource.data.printedAt is timestamp
-          || request.resource.data.printedBy == request.auth.uid
-          || request.resource.data.hideFromCajero is bool
-        )
-        // Prohibir modificación del total o items
-        && request.resource.data.total == resource.data.total
-        && request.resource.data.items == resource.data.items
-      );
-
-      // Lectura: admins pueden leer todo; cajero solo sus ventas de hoy (no hideFromCajero)
-      allow read: if isAdmin() || (
-        isSignedIn()
-        && request.auth.uid == resource.data.cajeroId
-        && resource.data.hideFromCajero != true
-      );
-
-      // NO permitir delete para nadie (auditoría)
-      allow delete: if false;
-    }
-
-    // reservas de comprobantes: crear (cualquiera que reserve), actualizar status,
-    // leer solo si eres el reservador o admin
-    match /comprobante_reservas/{resId} {
-      allow create: if isSignedIn()
-        && request.resource.data.reservedBy == request.auth.uid
-        && request.resource.data.status == 'reserved'
-        && request.resource.data.series is string
-        && request.resource.data.number is string;
-
-      allow update: if isAdmin() || (
-        isSignedIn()
-        && resource.data.reservedBy == request.auth.uid
-        && request.resource.data.status in ['used','cancelled']
-      );
-
-      allow read: if isAdmin() || (isSignedIn() && resource.data.reservedBy == request.auth.uid);
-      allow delete: if isAdmin();
-    }
-
-    // counters: solo admin puede leer y escribir
-    // (en producción, mejor manejar desde backend/Cloud Functions)
-    match /counters/{docId} {
-      allow read: if isAdmin();
-      allow write: if isAdmin();
-    }
-
-    // pedidos: admins pueden leer/escribir; mozo puede crear/actualizar los suyos;
-    // cajero solo puede leer estado entregado
-    match /pedidos/{docId} {
-      allow create: if isSignedIn();
-      allow read: if isAdmin() || isSignedIn();
-      allow update: if isAdmin() || (
-        isSignedIn() && resource.data.mozoId == request.auth.uid
-      );
-      allow delete: if isAdmin();
-    }
-
-    // mesa: admins pueden todo; lectura pública
-    match /mesa/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Default: denegar todo a menos que explícitamente permita
+    // DESARROLLO: Permitir todo lo autenticado
+    // En producción, usar reglas restrictivas
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if request.auth != null;
     }
   }
 }
