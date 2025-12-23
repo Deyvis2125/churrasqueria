@@ -343,3 +343,39 @@ body{
     justify-content: center;
   }
 }
+
+
+/* Hace el módulo más angosto y centrado */
+.hist-wrap{
+  width: 100%;
+  max-width: 980px;   /* 👈 ajusta: 900–1100 según tu gusto */
+  margin: 0 auto;
+  padding: 24px 18px;
+}
+
+/* Cabecera y métricas respiran mejor */
+.hist-head{
+  gap: 14px;
+}
+
+/* La tabla no rompe el layout: si es ancha, scroll */
+.table-wrap{
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Un ancho mínimo para que la tabla no se aplaste */
+.table{
+  width: 100%;
+  min-width: 920px;   /* 👈 ajusta si tienes muchas columnas */
+}
+.detalle-linea{
+  display: grid;
+  grid-template-columns: 1fr auto; /* nombre | precio */
+  gap: 8px;
+}
+
+.detalle-precio{
+  text-align: center;  /* 👈 precio centrado */
+  white-space: nowrap;
+}
