@@ -10,6 +10,26 @@ export default function Acceso() {
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
+  // ✅ Mensajes amigables (sin Firebase)
+  const getNiceAuthMessage = (errText = "") => {
+    const t = (errText || "").toLowerCase();
+
+    if (t.includes("invalid-credential") || t.includes("wrong-password") || t.includes("user-not-found")) {
+      return "Credenciales incorrectas. Intente nuevamente.";
+    }
+    if (t.includes("too-many-requests")) {
+      return "Demasiados intentos. Espere un momento e intente nuevamente.";
+    }
+    if (t.includes("network-request-failed") || t.includes("network")) {
+      return "Sin conexión. Revise su internet e intente nuevamente.";
+    }
+    if (t.includes("invalid-email")) {
+      return "El correo no es válido. Revíselo e intente nuevamente.";
+    }
+
+    return "No pudimos iniciar sesión. Revise sus datos e intente nuevamente.";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -20,34 +40,38 @@ export default function Acceso() {
       setLoading(false);
 
       if (!res.success) {
-        setMessage({ type: 'error', text: res.error || 'Error al iniciar sesión' });
-      } else {
-        setMessage({ type: 'success', text: 'Ingreso exitoso' });
-        console.log('Usuario autenticado:', res.user, 'rol:', res.role);
-        const role = (res.role || '').toString().trim().toLowerCase();
-        
-        switch (role) {
-          case 'admin':
-          case 'administrador':
-            navigate('/admin');
-            break;
-          case 'mozo':
-            navigate('/mozo');
-            break;
-          case 'cocina':
-            navigate('/cocina');
-            break;
-          case 'cajero':
-            navigate('/cajero');
-            break;
-          default:
-            setMessage({ type: 'error', text: `Rol no reconocido: ${res.role}` });
-            break;
-        }
+        // ✅ NO mostrar res.error crudo (Firebase). Lo convertimos a humano:
+        setMessage({ type: "error", text: getNiceAuthMessage(res.error) });
+        return;
+      }
+
+      setMessage({ type: "success", text: "Ingreso exitoso" });
+      console.log("Usuario autenticado:", res.user, "rol:", res.role);
+
+      const role = (res.role || "").toString().trim().toLowerCase();
+
+      switch (role) {
+        case "admin":
+        case "administrador":
+          navigate("/admin");
+          break;
+        case "mozo":
+          navigate("/mozo");
+          break;
+        case "cocina":
+          navigate("/cocina");
+          break;
+        case "cajero":
+          navigate("/cajero");
+          break;
+        default:
+          setMessage({ type: "error", text: "Su usuario no tiene un rol válido. Contacte al administrador." });
+          break;
       }
     } catch (err) {
       setLoading(false);
-      setMessage({ type: "error", text: err.message || "Error inesperado" });
+      // ✅ NO mostrar err.message crudo (Firebase). Lo convertimos a humano:
+      setMessage({ type: "error", text: getNiceAuthMessage(err?.message) });
     }
   };
 
@@ -84,11 +108,7 @@ export default function Acceso() {
             {loading ? "Ingresando..." : "Ingresar"}
           </button>
 
-          {message && (
-            <div className={`access-message ${message.type}`}>
-              {message.text}
-            </div>
-          )}
+          {message && <div className={`access-message ${message.type}`}>{message.text}</div>}
         </form>
       </div>
     </div>

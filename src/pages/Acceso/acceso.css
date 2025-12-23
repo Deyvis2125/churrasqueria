@@ -1,27 +1,21 @@
 /* ==============================
    ACCESO · CHURRASQUERÍA
-   Pantalla completa + centrado
-   Dark Grill · Liquid Glass
+   Dark Grill · Liquid Glass · PRO
    ============================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap");
 
 :root{
-  --bg0:#050304;
-  --bg1:#0b0607;
-  --bg2:#120709;
-
   --glass: rgba(18,10,12,.68);
-  --text:red;
+
+  --text:#f5f0ea;
   --muted: rgba(245,240,234,.7);
 
   --red:#7b1117;
   --red2:#b11a22;
   --gold:#d6a354;
 
-  --line: rgba(255,255,255,.14);
   --shadow: 0 32px 90px rgba(0,0,0,.75);
-
   --r:22px;
 }
 
@@ -41,42 +35,40 @@ body{
   background-attachment: fixed;
 }
 
-
 /* ==============================
-   LAYOUT PANTALLA COMPLETA
+   LAYOUT GENERAL
    ============================== */
 
 .access-layout{
-  min-height: 100vh;
-  width: 100%;
+  min-height:100vh;
+  width:100%;
 
-  display: flex;
-  align-items: center;      /* ✅ centrado vertical */
-  justify-content: center;  /* ✅ centrado horizontal */
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  padding: 32px;
+  padding:32px;
 }
 
 /* ==============================
-   CONTENEDOR EXPANDIDO
+   CONTENEDOR
    ============================== */
 
 .access-container{
-  width: 100%;
-  max-width: 720px;     /* ✅ más ancho en PC */
-  padding: 48px 52px;
+  width:100%;
+  max-width:720px;
+  padding:48px 52px;
 
-  background: var(--glass);
-  border-radius: var(--r);
-  border: 1px solid rgba(177,26,34,.35);
-  box-shadow: var(--shadow);
+  background:var(--glass);
+  border-radius:var(--r);
+  border:1px solid rgba(177,26,34,.35);
+  box-shadow:var(--shadow);
 
   backdrop-filter: blur(18px) saturate(150%);
-  position: relative;
-  overflow: hidden;
+  position:relative;
+  overflow:hidden;
 }
 
-/* brillo líquido */
 .access-container::before{
   content:"";
   position:absolute;
@@ -95,91 +87,113 @@ body{
   font-family:"Great Vibes", cursive;
   font-size: clamp(64px, 6vw, 86px);
   text-align:center;
-  margin: 0 0 10px 0;
-  color: var(--gold);
-  text-shadow: 0 20px 60px rgba(0,0,0,.7);
+  margin:0 0 6px;
+  color:var(--gold);
 }
 
 .access-subtitle{
+  font-family:"Great Vibes", cursive; /* ✅ estilo curveado */
+  font-size:32px;
   text-align:center;
-  font-size:15px;
   color:var(--muted);
-  margin-bottom: 32px;
-}
-
-/* ============================== */
-/* FORMULARIO MEJORADO */
-/* ============================== */
-
-.access-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* ✅ centrado horizontal */
-  gap: 40px; /* ✅ más espacio entre elementos */
-}
-
-.access-form label {
-  font-family: "Cinzel", serif; /* ✅ misma tipografía para todos */
-  font-size: 18px; /* ✅ tamaño uniforme */
-  letter-spacing: 0.8px;
-  color: var(--gold);
-  text-align: center; /* ✅ centrado texto */
-}
-
-.access-form input,
-.access-form select {
-  background: rgba(50, 50, 50, 0.85); /* ✅ fondo más elegante */
-  border: 2px solid var(--gold); /* ✅ borde más definido */
-  border-radius: 24px; /* ✅ bordes más redondeados */
-  padding: 16px 20px; /* ✅ más espacio interno */
-  color: var(--text);
-  font-size: 18px; /* ✅ texto más grande */
-  text-align: center; /* ✅ centrado texto */
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.access-form input::placeholder {
-  color: rgba(245, 240, 234, 0.6); /* ✅ placeholder más visible */
-}
-
-.access-form input:focus,
-.access-form select:focus {
-  outline: none;
-  border-color: var(--red2); /* ✅ color de enfoque */
-  box-shadow: 0 0 10px var(--red2);
-  transform: scale(1.05); /* ✅ efecto de enfoque */
+  margin-bottom:44px;
 }
 
 /* ==============================
-   BOTÓN PRINCIPAL
+   FORMULARIO PRO
+   Label IZQ · Input DER (alineado real)
+   ============================== */
+
+.access-form{
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+  width:100%;
+}
+
+/* fila */
+.access-form > div{
+  display:grid;
+  grid-template-columns: 170px 1fr; /* ancho fijo elegante */
+  align-items:center;
+  gap:24px;
+  width:100%;
+  margin-bottom:0 !important; /* anula inline */
+   padding-right: 80px;
+}
+
+/* LABEL — alineación óptica perfecta */
+.access-form label{
+  display:flex;                 /* 🔥 CLAVE */
+  align-items:center;           /* 🔥 centrado real */
+  justify-content:flex-start;     /* hacia el input */
+  height:100%;
+
+  font-family:"Cinzel", serif;
+  font-size:18px;
+  letter-spacing:0.6px;
+  color:var(--gold);
+  text-align:right;
+  padding-right:6px;
+  padding-left: 30px
+}
+
+/* INPUT */
+.access-form input{
+  width:100%;
+  background: rgba(50,50,50,.85);
+  border:2px solid var(--gold);
+  border-radius:26px;
+
+  padding:15px 20px;
+  font-size:17px;
+  color:var(--text);
+
+  transition:
+    border-color .3s ease,
+    box-shadow .3s ease,
+    transform .25s ease;
+}
+
+.access-form input::placeholder{
+  color: rgba(245,240,234,.55);
+}
+
+.access-form input:focus{
+  outline:none;
+  border-color:var(--red2);
+  box-shadow:0 0 12px rgba(177,26,34,.8);
+  transform: scale(1.02);
+}
+
+/* ==============================
+   BOTÓN
    ============================== */
 
 .access-btn{
-  margin-top: 20px;
-  padding: 18px 24px; /* ✅ más espacio interno */
-  min-height: 60px;
+  margin:34px auto 0;
+  padding:18px 30px;
+  min-height:62px;
 
-  border-radius: 30px; /* ✅ bordes más redondeados */
-  border: 2px solid var(--gold); /* ✅ borde más definido */
+  border-radius:32px;
+  border:2px solid var(--gold);
 
   font-family:"Cinzel", serif;
-  font-size:18px; /* ✅ texto más grande */
+  font-size:18px;
   font-weight:800;
   letter-spacing:1px;
 
   color:var(--text);
   cursor:pointer;
 
-  background:
-    linear-gradient(180deg, var(--red2), var(--red)); /* ✅ gradiente más vibrante */
-
-  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  background: linear-gradient(180deg, var(--red2), var(--red));
+  transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
 }
 
 .access-btn:hover{
-  transform: translateY(-4px); /* ✅ efecto más pronunciado */
-  filter: brightness(1.2);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8);
+  transform: translateY(-4px);
+  filter: brightness(1.15);
+  box-shadow:0 20px 48px rgba(0,0,0,.8);
 }
 
 .access-btn:disabled{
@@ -192,20 +206,59 @@ body{
    ============================== */
 
 .access-message{
-  text-align:center;
-  font-size:15px;
-  font-weight:600;
+  margin-top: 24px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
-.access-message.error{ color:#ff6b6b; }
-.access-message.success{ color:#6be6a6; }
+/* ERROR elegante */
+.access-message.error{
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  padding: 10px 16px;
+  border-radius: 12px;
+  max-width: 360px;
+  margin: 24px auto 0;
+  padding-left: 25px;
+}
+
+/* SUCCESS elegante */
+.access-message.success{
+  color: #6be6a6;
+  background: rgba(107, 230, 166, 0.08);
+  border: 1px solid rgba(107, 230, 166, 0.35);
+  padding: 10px 16px;
+  border-radius: 12px;
+  max-width: 360px;
+  margin: 24px auto 0;
+}
 
 /* ==============================
    RESPONSIVE
    ============================== */
 
-@media (max-width: 720px){
+@media (max-width:720px){
   .access-container{
-    padding: 36px 28px;
+    padding:36px 26px;
+  }
+
+  .access-form > div{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .access-form label{
+    justify-content:center;
+    text-align:center;
+    padding-right:0;
+  }
+
+  .access-subtitle{
+    font-size:26px;
   }
 }
