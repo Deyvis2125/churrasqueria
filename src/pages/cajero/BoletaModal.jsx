@@ -2,10 +2,12 @@ import React, { useState, useMemo } from 'react';
 import './BoletaModal.css';
 import { findClienteByDocument, createOrUpdateCliente } from '../../services/clienteService';
 import { reserveComprobante, cancelComprobanteReservation } from '../../services/historial-ventas';
+import { useAuth } from '../../context/AuthContext';
 
 const money = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
 
 const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
+  const { userData } = useAuth();
   const [tipoComprobante, setTipoComprobante] = useState('Boleta');
   
   // Datos del cliente
@@ -282,7 +284,7 @@ const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
         <header className="boleta-header-pro">
           <div className="header-line">{'─'.repeat(60)}</div>
           <h1 className="titulo-principal">CHURRASQUERÍA "ESTRELLA"</h1>
-          <p>RUC: 20601234567</p>
+          <p>RUC: 10441192849</p>
           <p>AV. ALAMEDA - PUERTO MALDONADO</p>
           <p>Telf: 916884949</p>
           <div className="header-line">{'─'.repeat(60)}</div>
@@ -313,7 +315,7 @@ const BoletaModal = ({ pedido, onPagoConfirmado, onCancelar }) => {
             </div>
             <div className="dato-fila">
               <span className="etiqueta">CAJERO</span>
-              <span className="valor">USUARIO</span>
+              <span className="valor">{userData?.nombre || 'USUARIO'}</span>
             </div>
 
             <div className="tipo-comprobante-select">

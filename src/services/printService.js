@@ -1,6 +1,7 @@
 // Servicio cliente para generar PDF de la boleta usando html2canvas + jsPDF cargados desde CDN
 import { storage } from '../firebase/config';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getUserName } from './authServices';
 
 export async function loadScriptOnce(src) {
   if (document.querySelector(`script[src="${src}"]`)) return;
@@ -30,7 +31,7 @@ export async function generateBoletaPDF(datosPago, meta = {}) {
   wrapper.style.left = '-9999px';
   wrapper.style.top = '0';
   wrapper.style.width = '360px';
-  wrapper.innerHTML = generateHTMLBoleta(datosPago, meta);
+  wrapper.innerHTML = await generateHTMLBoleta(datosPago, meta);
   document.body.appendChild(wrapper);
 
   try {
@@ -69,7 +70,7 @@ function escapeHtml(str) {
 
 function money(n) { return `S/ ${Number(n||0).toFixed(2)}`; }
 
-function generateHTMLBoleta(datosPago, meta) {
+async function generateHTMLBoleta(datosPago, meta) {
   const fecha = new Date(datosPago.fecha || Date.now());
   const fechaStr = fecha.toLocaleDateString('es-PE') + '  ' + fecha.toLocaleTimeString('es-PE');
   const customerName = escapeHtml(datosPago.cliente?.nombre || '-');
@@ -77,6 +78,13 @@ function generateHTMLBoleta(datosPago, meta) {
   const direccion = escapeHtml(datosPago.cliente?.direccion || '-');
   const serie = escapeHtml(meta.series || datosPago.series || '---');
   const number = escapeHtml(meta.number || datosPago.number || '---');
+
+  // Obtener nombre del cajero si no está en meta
+  let cajeroName = meta.cajeroName;
+  if (!cajeroName && meta.cajeroId) {
+    cajeroName = await getUserName(meta.cajeroId);
+  }
+  cajeroName = escapeHtml(cajeroName || 'USUARIO');
 
   // Items
   const items = datosPago.items || [];
@@ -137,7 +145,7 @@ function generateHTMLBoleta(datosPago, meta) {
   const html = `
     <div style="font-family: monospace; width:380px; padding:8px; background:#fff; color:#000; font-size:12px;">
       <div style="text-align:center; font-weight:bold; font-size:15px;">CHURRASQUERÍA "ESTRELLA"</div>
-      <div style="text-align:center; font-size:11px;">RUC: 20601234567</div>
+      <div style="text-align:center; font-size:11px;">RUC: 10441192849</div>
       <div style="text-align:center; font-size:11px;">AV. ALAMEDA - PTO. MALDONADO</div>
       <div style="text-align:center; font-size:11px; margin-bottom:6px;">Telf: 916884949</div>
       <div style="border-top:2px solid #000; border-bottom:2px solid #000; padding:6px 0; text-align:center; font-weight:bold;">BOLETA DE VENTA ELECTRÓNICA</div>
@@ -148,7 +156,7 @@ function generateHTMLBoleta(datosPago, meta) {
         <div>FECHA EMISIÓN : ${escapeHtml(fechaStr)}</div>
       </div>
       <div style="font-size:11px; display:flex; justify-content:space-between; margin-top:4px;">
-        <div>CAJERO        : ${escapeHtml(meta.cajeroName || meta.cajeroId || '')}</div>
+        <div>CAJERO        : ${cajeroName}</div>
       </div>
       <div style="font-size:11px; margin-top:4px;">CLIENTE       : ${customerName}</div>
       <div style="font-size:11px;">DNI/RUC       : ${docNum}</div>

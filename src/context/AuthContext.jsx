@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { auth, db } from '../firebase/config.js';
 import { getDoc, doc } from 'firebase/firestore';
 
@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,7 +19,9 @@ export function AuthProvider({ children }) {
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
-            setUserRole(userDoc.data().rol || 'cliente');
+            const data = userDoc.data();
+            setUserRole(data.rol || 'cliente');
+            setUserData(data);
           }
         } catch (error) {
           console.error('Error obteniendo rol:', error);
@@ -36,6 +39,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     userRole,
+    userData,
     loading,
     isAuthenticated: !!currentUser
   };
@@ -46,3 +50,5 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+export const useAuth = () => useContext(AuthContext);

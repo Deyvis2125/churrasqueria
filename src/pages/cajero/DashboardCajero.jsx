@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CajeroEntregados from "./CajeroEntregados";
 import CierreDia from "./CierreDia";
 import "./dashboard-cajero.css";
-
+import UserCard from "../../components/UserCard";
 export default function DashboardCajero() {
   const [tab, setTab] = useState("entregados");
 
@@ -13,6 +13,7 @@ export default function DashboardCajero() {
         <p className="cajero-sub">
           Cobros y cierre del día. Selecciona una opción.
         </p>
+         <UserCard />
       </header>
 
       <nav className="cajero-nav">

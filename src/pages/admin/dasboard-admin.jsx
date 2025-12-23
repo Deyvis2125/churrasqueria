@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminUsers from "./admin-users.jsx";
+import AdminUsers from "./admin-users-list.jsx";
 import AdminMenus from "./admin-menus.jsx";
 import AdminSales from "./admin-sales.jsx";
 import AdminMesas from "./admin-mesas.jsx";
-import AdminMenusList from "./admin-ver-menu.jsx";
+import AdminMenusList from "./admin-ver-menu.jsx"; 
+import AdminLogs from "./logs.jsx"
 import "./dashboard-admin.css";
 import UserCard from "../../components/UserCard";
 
@@ -48,7 +49,7 @@ export default function DashboardAdmin() {
           Mesas
         </button>
 
-        <button className="nav-button" onClick={() => navigate("/admin/logs")}>
+        <button className="nav-button" onClick={() => setTab("logs")}>
           Logs
         </button>
       </nav>
@@ -77,6 +78,7 @@ export default function DashboardAdmin() {
 
         {tab === "ventas" && <AdminSales />}
         {tab === "mesas" && <AdminMesas />}
+        {tab === "logs" && <AdminLogs />}
       </section>
     </div>
   );
