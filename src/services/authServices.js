@@ -86,3 +86,19 @@ export async function getUserRole(uid) {
     return 'cliente';
 }
 }   
+
+// 4. OBTENER NOMBRE DE USUARIO
+export async function getUserName(uid) {
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    
+    if (userDoc.exists()) {
+      return userDoc.data().nombre || uid;
+    }
+    return uid; // Si no existe, retornar el ID
+    
+  } catch (error) {
+    console.error('Error obteniendo nombre de usuario:', error);
+    return uid;
+  }
+}

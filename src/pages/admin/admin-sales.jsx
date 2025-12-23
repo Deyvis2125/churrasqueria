@@ -10,6 +10,7 @@ import {
   limit,
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import { getUserName } from "../../services/authServices";
 
 const fmtMoney = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
 
@@ -48,6 +49,7 @@ function startOfMonth() {
 export default function AdminSales() {
   const [ventas, setVentas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userNames, setUserNames] = useState({});
 
   const [range, setRange] = useState("all"); // all | today | 7d | month
 
@@ -73,9 +75,22 @@ export default function AdminSales() {
 
     const unsub = onSnapshot(
       qRef,
-      (snap) => {
+      async (snap) => {
         const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
         setVentas(data);
+
+        // Obtener nombres de cajeros únicos
+        const uniqueCajeroIds = [...new Set(data.map(v => v.cajeroId).filter(id => id))];
+        if (uniqueCajeroIds.length > 0) {
+          const promises = uniqueCajeroIds.map(id => getUserName(id));
+          const names = await Promise.all(promises);
+          const namesMap = {};
+          uniqueCajeroIds.forEach((id, index) => {
+            namesMap[id] = names[index];
+          });
+          setUserNames(namesMap);
+        }
+
         setLoading(false);
       },
       (err) => {
@@ -179,7 +194,6 @@ export default function AdminSales() {
                 <th>Método</th>
                 <th>Detalle</th>
                 <th className="cell-right">Total</th>
-                <th>Boleta</th>
               </tr>
             </thead>
 
@@ -187,28 +201,13 @@ export default function AdminSales() {
               {ventas.map((v) => (
                 <tr key={v.id}>
                   <td>{fmtFecha(v.fechaHora)}</td>
-                  <td>{v.cajeroName || v.cajeroId || "—"}</td>
+                  <td>{userNames[v.cajeroId] || v.cajeroId || "—"}</td>
                   <td>Mesa {v.mesaNumero ?? "—"}</td>
                   <td>{(v.series || "—") + "-" + (v.number || "—")}</td>
                   <td className="cell-detail">{detalleMetodoPago(v.payments)}</td>
                   <td className="cell-detail">{detalleItems(v.items)}</td>
                   <td className="cell-right">
                     <span className="money">{fmtMoney(v.total)}</span>
-                  </td>
-
-                  {/* ✅ Descarga de boleta */}
-                  <td>
-                    {v.boletaUrl ? (
-                      <button
-                        className="btn-descargar-boleta"
-                        onClick={() => window.open(v.boletaUrl, "_blank")}
-                        title="Descargar boleta"
-                      >
-                        📄
-                      </button>
-                    ) : (
-                      <span className="muted">—</span>
-                    )}
                   </td>
                 </tr>
               ))}
