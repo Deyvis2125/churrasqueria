@@ -204,7 +204,7 @@ export default function AdminUsersList() {
   };
 
   return (
-    <div className="admin-card">
+    <div className="admin-users admin-card">
       <h3>Listado de usuarios</h3>
 
       <div className="admin-filters">

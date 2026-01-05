@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminUsers from "./admin-users-list.jsx";
+import Registro from "../Acceso/registro.jsx";
 import AdminMenus from "./admin-menus.jsx";
 import AdminSales from "./admin-sales.jsx";
 import AdminMesas from "./admin-mesas.jsx";
@@ -10,7 +11,7 @@ import "./dashboard-admin.css";
 import UserCard from "../../components/UserCard";
 export default function DashboardAdmin() {
   const [tab, setTab] = useState("usuarios");
-  const [subTab, setSubTab] = useState("crear");
+  const [subTab, setSubTab] = useState("listar");
   const navigate = useNavigate();
 
   return (
@@ -32,8 +33,8 @@ export default function DashboardAdmin() {
       </div>
 
       <nav className="dashboard-nav">
-        <button className="nav-button" onClick={() => setTab("usuarios")}>
-          Registrar Usuario
+        <button className="nav-button" onClick={() => { setTab("usuarios"); setSubTab("listar"); }}>
+          Usuarios
         </button>
 
         <button className="nav-button" onClick={() => setTab("menus")}>
@@ -54,7 +55,21 @@ export default function DashboardAdmin() {
       </nav>
 
       <section className="dashboard-content">
-        {tab === "usuarios" && <AdminUsers />}
+        {tab === "usuarios" && (
+          <div>
+            <nav className="dashboard-nav">
+              <button className="nav-button" onClick={() => setSubTab("listar")}>
+                Listar
+              </button>
+              <button className="nav-button" onClick={() => setSubTab("agregar")}>
+                Agregar
+              </button>
+            </nav>
+
+            {subTab === "listar" && <AdminUsers />}
+            {subTab === "agregar" && <Registro />}
+          </div>
+        )}
 
         {tab === "menus" && (
           <div>
