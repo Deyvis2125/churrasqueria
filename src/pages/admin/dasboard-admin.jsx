@@ -8,7 +8,6 @@ import AdminMenusList from "./admin-ver-menu.jsx";
 import AdminLogs from "./logs.jsx"
 import "./dashboard-admin.css";
 import UserCard from "../../components/UserCard";
-import Registro from "../Acceso/registro.jsx"
 export default function DashboardAdmin() {
   const [tab, setTab] = useState("usuarios");
   const [subTab, setSubTab] = useState("crear");
